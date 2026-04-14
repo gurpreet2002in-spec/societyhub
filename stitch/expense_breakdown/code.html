@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Society Expenses | Elevated Living</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-container": "#a44100",
+              "on-primary-fixed": "#0f0069",
+              "secondary-fixed-dim": "#4ae176",
+              "secondary-fixed": "#6bff8f",
+              "on-background": "#191c1d",
+              "primary-fixed-dim": "#c3c0ff",
+              "primary-fixed": "#e2dfff",
+              "surface-container-lowest": "#ffffff",
+              "tertiary": "#7e3000",
+              "surface-variant": "#e1e3e4",
+              "error": "#ba1a1a",
+              "surface-container": "#edeeef",
+              "secondary": "#006e2f",
+              "inverse-primary": "#c3c0ff",
+              "error-container": "#ffdad6",
+              "on-secondary": "#ffffff",
+              "surface-tint": "#4d44e3",
+              "surface-container-highest": "#e1e3e4",
+              "on-surface-variant": "#464555",
+              "surface-bright": "#f8f9fa",
+              "surface-container-high": "#e7e8e9",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d9dadb",
+              "surface": "#f8f9fa",
+              "on-secondary-container": "#007432",
+              "on-secondary-fixed": "#002109",
+              "secondary-container": "#6bff8f",
+              "on-primary": "#ffffff",
+              "primary-container": "#4f46e5",
+              "on-surface": "#191c1d",
+              "background": "#f8f9fa",
+              "outline-variant": "#c7c4d8",
+              "on-primary-fixed-variant": "#3323cc",
+              "primary": "#3525cd",
+              "outline": "#777587",
+              "on-secondary-fixed-variant": "#005321",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#f3f4f5",
+              "on-error": "#ffffff",
+              "tertiary-fixed-dim": "#ffb695",
+              "on-primary-container": "#dad7ff",
+              "inverse-on-surface": "#f0f1f2",
+              "inverse-surface": "#2e3132",
+              "tertiary-fixed": "#ffdbcc",
+              "on-tertiary-fixed-variant": "#7b2f00",
+              "on-tertiary-container": "#ffd2be",
+              "on-tertiary-fixed": "#351000"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .tonal-layering {
+        background: linear-gradient(180deg, rgba(248, 249, 250, 0) 0%, rgba(243, 244, 245, 1) 100%);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-indigo-600 dark:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors p-2 rounded-full">
+                menu
+            </button>
+<h1 class="text-xl font-black text-slate-900 dark:text-white tracking-tight font-headline">Elevated Living</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-indigo-600 dark:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors p-2 rounded-full">
+                notifications
+            </button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-5xl mx-auto">
+<!-- Header Section: Editorial Authority -->
+<section class="mb-10">
+<p class="font-label text-[0.6875rem] font-bold uppercase tracking-widest text-primary mb-2">Transparency Dashboard</p>
+<h2 class="font-headline font-bold text-[2.75rem] leading-tight tracking-tight text-on-surface">Society Expenses</h2>
+<div class="mt-4 flex flex-wrap items-center gap-4">
+<div class="bg-surface-container-low px-4 py-2 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">account_balance_wallet</span>
+<span class="font-label font-semibold text-sm">Monthly Budget: ₹4,50,000</span>
+</div>
+<div class="bg-secondary-container/30 px-4 py-2 rounded-full flex items-center gap-2 text-on-secondary-container">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span class="font-label font-semibold text-sm">12% less than last month</span>
+</div>
+</div>
+</section>
+<!-- Filters: Minimalist & Tactile -->
+<section class="mb-8 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+<div class="flex gap-2 overflow-x-auto no-scrollbar pb-2 w-full md:w-auto">
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label font-bold text-[0.6875rem] uppercase tracking-wider whitespace-nowrap shadow-lg shadow-primary/20">Monthly</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2.5 rounded-full font-label font-bold text-[0.6875rem] uppercase tracking-wider whitespace-nowrap hover:bg-surface-variant transition-colors">Category</button>
+<button class="bg-surface-container-high text-on-surface-variant px-6 py-2.5 rounded-full font-label font-bold text-[0.6875rem] uppercase tracking-wider whitespace-nowrap hover:bg-surface-variant transition-colors">Project-Based</button>
+</div>
+<div class="relative w-full md:w-64">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-lg pl-10 pr-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 font-body placeholder:text-outline" placeholder="Search audit trail..." type="text"/>
+</div>
+</section>
+<!-- Bento Grid / Asymmetric Layout for Highlights -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="md:col-span-2 bg-white rounded-lg p-8 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+<div class="relative z-10">
+<h3 class="font-headline font-bold text-xl mb-1">Recent Big-Ticket</h3>
+<p class="text-on-surface-variant text-sm mb-6">Lift Maintenance &amp; Modernization</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-headline font-extrabold tracking-tighter text-on-surface">₹74,200</span>
+<span class="text-error font-bold text-xs uppercase">Pending Approval</span>
+</div>
+</div>
+<div class="relative z-10 mt-6">
+<button class="bg-primary-container text-on-primary-container px-5 py-2 rounded-full font-label font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all">View Full Audit</button>
+</div>
+<!-- Abstract Texture Background -->
+<div class="absolute -right-10 -bottom-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="absolute right-8 top-8 opacity-10">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">elevator</span>
+</div>
+</div>
+<div class="bg-primary text-on-primary rounded-lg p-8 shadow-xl shadow-primary/10 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-4xl mb-4" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<h3 class="font-headline font-bold text-lg mb-2">Total October</h3>
+<p class="text-3xl font-headline font-extrabold tracking-tighter">₹2,85,400</p>
+<div class="mt-6 w-full h-1 bg-white/20 rounded-full overflow-hidden">
+<div class="w-[65%] h-full bg-secondary-fixed"></div>
+</div>
+<p class="mt-2 text-[10px] uppercase font-bold tracking-widest opacity-80">65% of monthly budget</p>
+</div>
+</div>
+<!-- Detailed Expense List: No Borders, Pure Tonal Depth -->
+<div class="space-y-4">
+<h4 class="font-label text-[0.6875rem] font-bold uppercase tracking-[0.2em] text-outline mb-6 ml-2">Verified Expenditures</h4>
+<!-- Expense Item 1 -->
+<div class="bg-white hover:bg-surface-container-low transition-all duration-300 rounded-lg p-6 group">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div>
+<h5 class="font-headline font-bold text-lg text-on-surface">Water Tank Cleaning</h5>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-xs font-semibold text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Oct 24, 2023
+                                </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="bg-secondary-fixed/40 text-on-secondary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">Maintenance</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-end">
+<div class="text-right">
+<p class="font-headline font-extrabold text-xl tracking-tight text-on-surface">₹15,000</p>
+<p class="text-[10px] font-bold text-secondary uppercase tracking-wider">Paid via IMPS</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:block w-12 h-12 rounded-md bg-surface-container-highest overflow-hidden cursor-pointer hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover" data-alt="Close up photo of a paper receipt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYMQhyhA9fjRHYs6dZNo06abvCbpWMt9GJmDDVZYN6FaLxvC681dxiijBCrTn2ZZEoT2EQKtHcB-8LPL6FAVH2LfjWi7tpXZjcm9vmE7ee8nsiRfLATQkND_is3whTRx1ecqGyKl1YP1NLIdZyNLns1DbPTSNXlTXdZOVhMhDoOTsDvIIszOQtPaD_M6cdDs3pDSnGcY96qoHStsv90J__KdCxSv1XEE1g4IQjDHjWcRPfuwR1HhS0d47fWrKnPkeyKm6W-ioJnv8"/>
+</div>
+<button class="p-3 rounded-full bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined block">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Expense Item 2 -->
+<div class="bg-white hover:bg-surface-container-low transition-all duration-300 rounded-lg p-6 group">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div>
+<h5 class="font-headline font-bold text-lg text-on-surface">Common Area Electricity</h5>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-xs font-semibold text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Oct 21, 2023
+                                </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">Utility</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-end">
+<div class="text-right">
+<p class="font-headline font-extrabold text-xl tracking-tight text-on-surface">₹1,12,450</p>
+<p class="text-[10px] font-bold text-secondary uppercase tracking-wider">Paid to BEST</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:block w-12 h-12 rounded-md bg-surface-container-highest overflow-hidden cursor-pointer hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover" data-alt="Official utility bill document preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiEnEqkQyuSESoe6oqI9y0vOMhSV-2bdm1nNsVGXpUIqqlbxOp7laYwRP_DS50HVAj4D8L3T9n87-HQbL9k7XCFeM5YjRmgw3IwWH0xdQfnf1rQdexakBdauTfeRotJZfulX7CFZhsApqg6M6SdQ6240xPdLmSRD8wMPNABwSBMsF1NJJcUidrRp_zxtx5vCnKQ9O-jSge8U0r1xrjovy4KDxAHLiRdxptHwTlpW4LlluqUvux7StDlhi9Y93J0-o1rrM0yh8monc"/>
+</div>
+<button class="p-3 rounded-full bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined block">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Expense Item 3 -->
+<div class="bg-white hover:bg-surface-container-low transition-all duration-300 rounded-lg p-6 group">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h5 class="font-headline font-bold text-lg text-on-surface">Security Personnel Salaries</h5>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-xs font-semibold text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Oct 18, 2023
+                                </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">Staffing</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-end">
+<div class="text-right">
+<p class="font-headline font-extrabold text-xl tracking-tight text-on-surface">₹84,000</p>
+<p class="text-[10px] font-bold text-secondary uppercase tracking-wider">Bank Transfer</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:block w-12 h-12 rounded-md bg-surface-container-highest flex items-center justify-center text-outline">
+<span class="material-symbols-outlined">attachment</span>
+</div>
+<button class="p-3 rounded-full bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined block">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Expense Item 4 (Low Value) -->
+<div class="bg-white hover:bg-surface-container-low transition-all duration-300 rounded-lg p-6 group">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">mop</span>
+</div>
+<div>
+<h5 class="font-headline font-bold text-lg text-on-surface">Plumbing Consumables</h5>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-xs font-semibold text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span> Oct 15, 2023
+                                </span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span class="bg-secondary-fixed/40 text-on-secondary-fixed-variant px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">Repair</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-end">
+<div class="text-right">
+<p class="font-headline font-extrabold text-xl tracking-tight text-on-surface">₹2,850</p>
+<p class="text-[10px] font-bold text-secondary uppercase tracking-wider">Petty Cash</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:block w-12 h-12 rounded-md bg-surface-container-highest overflow-hidden cursor-pointer hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover" data-alt="Small petty cash voucher photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmiOycmBqBuyt2fqDLOdkTqf6Pca0rHh8eiLS2pdU-MzB8rzW4USbjixPk85sNFFeVcUevHDJtEKHobRhOsVRFrWMI09Usolgx5xsei1W6vRyVqgmuGAB48DXQSHBiTAM0K6M587HlX6rlY1u89eSWYbpNxv2o2r5ZE5QApkgkaKQswxdqgVdM7ZhOQBwjzsOpWmThk5qJCC-hJ7ZjDMbehFevRcC_7wAX6-K0-oqdJhd7FEIBacV5OnSajvnEQQg5KRpRc06ZQ-s"/>
+</div>
+<button class="p-3 rounded-full bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined block">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Audit Note Footer -->
+<div class="mt-12 bg-surface-container-low p-8 rounded-lg flex flex-col md:flex-row items-center gap-6">
+<div class="bg-white p-4 rounded-full text-primary">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div>
+<h6 class="font-headline font-bold text-lg mb-1">Audit Transparency Policy</h6>
+<p class="text-on-surface-variant text-sm max-w-2xl">Every expense listed here is cross-verified by the Treasurer and the Society Auditor. All original physical receipts are available at the Society Office upon 24-hour request notice.</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white dark:bg-slate-900 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-[2rem]">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2">
+<span class="material-symbols-outlined">home</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-2xl px-5 py-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Finance</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2">
+<span class="material-symbols-outlined">assignment_late</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Complaints</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2">
+<span class="material-symbols-outlined">person</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Profile</span>
+</div>
+</nav>
+<!-- Floating Action Button: Add Expense (Contextual) -->
+<button class="fixed right-6 bottom-28 w-16 h-16 bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-all z-40">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

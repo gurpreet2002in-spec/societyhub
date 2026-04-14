@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#464555",
+              "outline-variant": "#c7c4d8",
+              "on-surface": "#191c1d",
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "on-secondary-fixed": "#002109",
+              "error": "#ba1a1a",
+              "surface-container": "#edeeef",
+              "secondary-fixed": "#6bff8f",
+              "primary": "#3525cd",
+              "on-secondary-container": "#007432",
+              "tertiary-fixed": "#ffdbcc",
+              "on-primary-container": "#dad7ff",
+              "inverse-on-surface": "#f0f1f2",
+              "tertiary": "#7e3000",
+              "secondary-fixed-dim": "#4ae176",
+              "on-primary-fixed": "#0f0069",
+              "on-primary-fixed-variant": "#3323cc",
+              "on-primary": "#ffffff",
+              "surface-dim": "#d9dadb",
+              "surface-bright": "#f8f9fa",
+              "surface-container-high": "#e7e8e9",
+              "tertiary-fixed-dim": "#ffb695",
+              "tertiary-container": "#a44100",
+              "secondary-container": "#6bff8f",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "outline": "#777587",
+              "on-tertiary-container": "#ffd2be",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#c3c0ff",
+              "secondary": "#006e2f",
+              "background": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "surface-tint": "#4d44e3",
+              "on-tertiary-fixed": "#351000",
+              "on-tertiary-fixed-variant": "#7b2f00",
+              "primary-container": "#4f46e5",
+              "primary-fixed-dim": "#c3c0ff",
+              "surface-container-low": "#f3f4f5",
+              "surface": "#f8f9fa",
+              "primary-fixed": "#e2dfff",
+              "on-secondary-fixed-variant": "#005321",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl fixed top-0 w-full z-50 shadow-sm shadow-indigo-500/5 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Resident Profile Avatar Headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA194YcQxmhvEhEg8Kz72gwenqXF51Usf5sIG6QDSaId8pSTHHD_rTeM_0D1GVNoVIs6BLMkT4a_KTxNPkJiBQOJW8kKga9uq6fH5ZRntjLS_6zy1alYuiO2iU7o0fvYbRGqkLdZx0gA_O1UkXknvXVWgt4r5AvDVUnMC1tQkeMKN2BaPA3qvjSBs5KUuNqaRapBHRjss04pmYCHiVYZjmRCb_sBjEZ8CHdvsld75ucCAeEU6c9fvYdImNx6Y-CkbKSljmNaBUSBJw"/>
+</div>
+<span class="font-manrope text-lg font-bold tracking-tight text-indigo-600 dark:text-indigo-400">Elevated Living</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-500">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-5xl mx-auto">
+<!-- Header Section -->
+<section class="mb-10">
+<div class="flex justify-between items-end mb-2">
+<div>
+<span class="text-[0.6875rem] font-semibold uppercase tracking-widest text-primary mb-2 block">Resident Assets</span>
+<h1 class="text-3xl font-extrabold text-on-surface tracking-tight">My Vehicles</h1>
+</div>
+<button class="hidden md:flex items-center gap-2 bg-gradient-to-br from-primary to-primary-container text-white px-6 py-3 rounded-full font-bold text-sm tracking-wide shadow-lg shadow-indigo-500/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+                    ADD VEHICLE
+                </button>
+</div>
+<p class="text-on-surface-variant text-sm max-w-md">Manage your registered vehicles and access digital parking stickers for society access.</p>
+</section>
+<!-- Bento Grid for Vehicles -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Vehicle Card 1: 4W -->
+<div class="bg-surface-container-lowest rounded-lg p-8 shadow-[0_-8px_30px_rgb(0,0,0,0.02)] border border-slate-50 relative group overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-primary-fixed rounded-2xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Active</span>
+</div>
+<div class="space-y-1 mb-8">
+<h3 class="text-2xl font-black text-on-surface tracking-tighter">KA 01 MR 7742</h3>
+<p class="text-on-surface-variant font-medium">Tesla Model 3 • Midnight Blue</p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="bg-surface-container-low p-4 rounded-2xl">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Parking Slot</span>
+<span class="text-lg font-bold text-on-surface tracking-tight">Slot B-12</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Level</span>
+<span class="text-lg font-bold text-on-surface tracking-tight">Basement 1</span>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 bg-surface-container-high text-on-surface font-bold py-4 rounded-xl hover:bg-primary hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined">qr_code_2</span>
+                    DOWNLOAD QR STICKER
+                </button>
+</div>
+<!-- Vehicle Card 2: 2W -->
+<div class="bg-surface-container-lowest rounded-lg p-8 shadow-[0_-8px_30_rgb(0,0,0,0.02)] border border-slate-50 relative group overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary-container"></div>
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 bg-primary-fixed rounded-2xl flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">motorcycle</span>
+</div>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest">Active</span>
+</div>
+<div class="space-y-1 mb-8">
+<h3 class="text-2xl font-black text-on-surface tracking-tighter">KA 03 JP 2105</h3>
+<p class="text-on-surface-variant font-medium">Royal Enfield • Stealth Black</p>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="bg-surface-container-low p-4 rounded-2xl">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Parking Slot</span>
+<span class="text-lg font-bold text-on-surface tracking-tight">Slot P-04</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-2xl">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Level</span>
+<span class="text-lg font-bold text-on-surface tracking-tight">Ground</span>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 bg-surface-container-high text-on-surface font-bold py-4 rounded-xl hover:bg-primary hover:text-white transition-all duration-300">
+<span class="material-symbols-outlined">qr_code_2</span>
+                    DOWNLOAD QR STICKER
+                </button>
+</div>
+<!-- Add New Vehicle Placeholder Card -->
+<div class="bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-lg p-8 flex flex-col items-center justify-center text-center group hover:border-primary/30 transition-colors cursor-pointer min-h-[320px]">
+<div class="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">add</span>
+</div>
+<h4 class="font-bold text-on-surface mb-1">Register New Vehicle</h4>
+<p class="text-on-surface-variant text-sm max-w-[200px]">Securely add another vehicle to your household profile.</p>
+</div>
+<!-- Information Bento Cell -->
+<div class="bg-indigo-600 rounded-lg p-8 text-white flex flex-col justify-between overflow-hidden relative">
+<div class="z-10">
+<span class="material-symbols-outlined text-indigo-300 mb-4">info</span>
+<h4 class="text-xl font-bold mb-2">Parking Policy</h4>
+<p class="text-indigo-100 text-sm leading-relaxed">Ensure all vehicles display the digital QR sticker for seamless automated entry at the North and South gates.</p>
+</div>
+<div class="mt-6 z-10">
+<a class="inline-flex items-center gap-2 text-sm font-bold border-b border-indigo-400 pb-1 hover:border-white transition-colors" href="#">
+                        READ GUIDELINES
+                        <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<!-- Abstract Decorative Pattern -->
+<div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+<div class="absolute -left-10 -top-10 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl"></div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (Mobile) -->
+<button class="md:hidden fixed bottom-28 right-6 w-16 h-16 bg-gradient-to-br from-primary to-primary-container text-white rounded-full shadow-2xl shadow-primary/40 flex items-center justify-center z-50 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-[2.5rem]">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined mb-1">home_app_logo</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-2xl px-5 py-2 active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest">Parking</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined mb-1">storefront</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest">Profile</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Flutter
+.dart_tool/
+.flutter-plugins-dependencies
+.buildlog
+*.lock
+pubspec.lock
+
+# Build
+build/
+android/app/build/
+android/.gradle/
+ios/Pods/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.env.local
+
+# Database
+*.sqlite
+*.db
+
+# Logs
+*.log
+npm_debug.log*
+
+# Test
+coverage/

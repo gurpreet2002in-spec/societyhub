@@ -1,0 +1,11 @@
+﻿[90mCLI toolkit to manage antigravity IDE rules and commands (antigravity-kit v0.0.6)[39m
+
+[4m[1mUSAGE[22m[24m [36mantigravity-kit auth|upgrade[39m
+
+[4m[1mCOMMANDS[22m[24m
+
+     [36mauth[39m    Manage Google AntiGravity authentication     
+  [36mupgrade[39m    Upgrade antigravity-kit to the latest version
+
+Use [36mantigravity-kit <command> --help[39m for more information about a command.
+

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Elevated Living | Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-container": "#6bff8f",
+                        "primary-fixed": "#e2dfff",
+                        "secondary": "#006e2f",
+                        "outline-variant": "#c7c4d8",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#a44100",
+                        "inverse-on-surface": "#f0f1f2",
+                        "inverse-primary": "#c3c0ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface": "#f8f9fa",
+                        "inverse-surface": "#2e3132",
+                        "surface-variant": "#e1e3e4",
+                        "secondary-fixed": "#6bff8f",
+                        "on-secondary-container": "#007432",
+                        "on-tertiary-fixed": "#351000",
+                        "surface-tint": "#4d44e3",
+                        "primary-container": "#4f46e5",
+                        "on-primary-fixed": "#0f0069",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "background": "#f8f9fa",
+                        "on-primary": "#ffffff",
+                        "primary": "#3525cd",
+                        "surface-bright": "#f8f9fa",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary-fixed": "#002109",
+                        "on-primary-container": "#dad7ff",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#4ae176",
+                        "surface-container": "#edeeef",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-background": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "on-surface": "#191c1d",
+                        "tertiary": "#7e3000",
+                        "outline": "#777587",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary-fixed-variant": "#005321",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface-variant": "#464555",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffd2be"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md fixed top-0 w-full z-50 shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400" data-icon="menu">menu</span>
+</button>
+<h1 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">Elevated Living</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="Admin user profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE6CX_gWUankS4qBASQ-RICC3sfwhE4h49PkpmF3LN4HDNHT6fsq5X3cyLGytBBgh_rnJIUPt0qjyRmYxkv2EH9aISAVzidLxPkOwk0_Khna5vpf9xU6dCTcl90sP4ONfCSw8vqSo6qzXfcTaKakULMtXzTve2oKm78p_GhKlLt7ZXP_PEvFV1ZUJGnUP6UEqOpYH7S3oeLY6nO0eQvF9mnlImCwKsG-1m_FOrKzHMHqrM-6pNOTmbbCegymVK57qIhAytsUaeNAo"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-7xl mx-auto space-y-10">
+<!-- Welcome Section -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<p class="text-xs font-semibold tracking-[0.2em] text-primary uppercase mb-2">Management Portal</p>
+<h2 class="text-4xl font-extrabold text-on-surface tracking-tight">Society Overview</h2>
+</div>
+<div class="flex flex-wrap gap-3">
+<button class="bg-surface-container-high text-on-surface px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="campaign">campaign</span>
+                    Broadcast Message
+                </button>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-primary/20 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    Add Notice
+                </button>
+</div>
+</section>
+<!-- Stats Grid (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stats Card 1: Collection -->
+<div class="bg-surface-container-lowest p-8 rounded-lg shadow-sm border border-outline-variant/10 group overflow-hidden relative">
+<div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="payments">payments</span>
+</div>
+<p class="text-on-surface-variant font-medium text-sm mb-4">Collection Status</p>
+<div class="flex items-end justify-between mb-4">
+<h3 class="text-5xl font-extrabold tracking-tighter">85%</h3>
+<span class="text-secondary font-bold text-sm bg-secondary-container/30 px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+                        +2.4%
+                    </span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[85%] rounded-full"></div>
+</div>
+<p class="mt-4 text-xs text-on-surface-variant font-medium italic">Collected: ₹4.2L / ₹5L Expected</p>
+</div>
+<!-- Stats Card 2: Complaints -->
+<div class="bg-surface-container-lowest p-8 rounded-lg shadow-sm border border-outline-variant/10 group overflow-hidden relative">
+<div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="Assignment_Late">assignment_late</span>
+</div>
+<p class="text-on-surface-variant font-medium text-sm mb-4">Open Complaints</p>
+<h3 class="text-5xl font-extrabold tracking-tighter text-error mb-4">12</h3>
+<div class="flex gap-2">
+<span class="text-xs bg-error-container text-on-error-container px-3 py-1 rounded-full font-semibold">4 Critical</span>
+<span class="text-xs bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full font-semibold">8 Pending</span>
+</div>
+</div>
+<!-- Stats Card 3: Visitors -->
+<div class="bg-surface-container-lowest p-8 rounded-lg shadow-sm border border-outline-variant/10 group overflow-hidden relative">
+<div class="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="group">group</span>
+</div>
+<p class="text-on-surface-variant font-medium text-sm mb-4">Visitors Today</p>
+<div class="flex items-center gap-4 mb-4">
+<h3 class="text-5xl font-extrabold tracking-tighter">45</h3>
+<div class="h-10 w-px bg-outline-variant/30"></div>
+<button class="text-primary font-bold text-xs uppercase tracking-widest hover:underline flex items-center gap-1">
+                        Review <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="flex -space-x-3">
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Visitor avatar thumbnail 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQBPnfZ7da82-fUtQWmYtcB-Bzsr2mua-MNWkyDJXN655ubsbY6H4vlF8ctnAICeTsiZt1A_VEmnEO6T8c5nhzoEbsW85mRBM_Siz-KLDhsRao18uhe-GQy2cLJqKtPxB75wlFioUKJ4MtG5JCqSgVSJqTH4dKlyRMEEmVatOiA9954KDv7CxLS5EW5D4YSDoXMJXMF1KpRSSpv4Nh7_Ure2pZe1YFMk3-E_kV7F7aiP3PJrZsA_A6KkFt9aHV-jKHihuCTPfYnm0"/>
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Visitor avatar thumbnail 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7SYElTlbN3tRC3APblc5y4zl-RzD22BihSuncgguV5XFceZF2zix_bn4_xJSEepeE1regn4U51thuFzH98dAlaX5-QIN1DfsQu0VO-_0QL7TvfQ5AtoZ9PKOnNXRYxZnTGqdMxqsGEVzATYG2LJRwxuNn_L5eix_nUj_1SbyTUQpEjqP3wGAUbdH86aNm73ZClzoajIyyMrw8lAcFmEpSx0t-dfNWCQZSiZSzpgEyc_tP2y3lBE8aGz5s5m9tGT08Tc_7gXdji24"/>
+<img class="w-8 h-8 rounded-full border-2 border-white object-cover" data-alt="Visitor avatar thumbnail 3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOZkEEaJx8ICBnS6C-dBFEb8jJOvIkJF-o_vV1Oz2gHgyUokuALcUHrwWWrK7S5kuAF16CodHtoT_uX-LVfzWRUcdPAN1uOkKxIHs0baAwMOAI5EMMWeVeXJFdGC3-QTc5uXbj3XsCHrWei6TLuv2rygjkAqJWl0eU95AWC9icvIOV9KvEyj4MfgbhAoNg3uNnC254okB4fvPPdFiF53-FVTHHCWzEcOTdz6p3_6HchtJTlYXno8AiYMhn4m5UR0TW5_JnwCWiitM"/>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">+42</div>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+<!-- Complaints Section -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-2xl font-bold tracking-tight">Recent Complaints</h3>
+<button class="text-primary font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-full bg-primary-fixed hover:bg-primary/10 transition-colors">View All</button>
+</div>
+<div class="bg-surface-container-low rounded-lg p-2 space-y-2">
+<!-- Complaint Row 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-fixed rounded-2xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Water Leakage in Bathroom</h4>
+<p class="text-xs text-on-surface-variant">Rahul Sharma • Flat B-402</p>
+</div>
+</div>
+<span class="text-[10px] bg-error-container text-on-error-container px-3 py-1 rounded-full font-bold uppercase tracking-wider">Critical</span>
+</div>
+<!-- Complaint Row 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-highest rounded-2xl flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="electrical_services">electrical_services</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Lift Not Working</h4>
+<p class="text-xs text-on-surface-variant">Anita Desai • Wing C</p>
+</div>
+</div>
+<span class="text-[10px] bg-surface-container-high text-on-surface-variant px-3 py-1 rounded-full font-bold uppercase tracking-wider">Investigating</span>
+</div>
+<!-- Complaint Row 3 -->
+<div class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between group hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-highest rounded-2xl flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="park">park</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Garden Maintenance</h4>
+<p class="text-xs text-on-surface-variant">Vikram Goel • Flat A-105</p>
+</div>
+</div>
+<span class="text-[10px] bg-secondary-container/50 text-on-secondary-container px-3 py-1 rounded-full font-bold uppercase tracking-wider">Scheduled</span>
+</div>
+</div>
+</div>
+<!-- Notices Section -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-2xl font-bold tracking-tight">Society Notices</h3>
+<button class="text-primary font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-full bg-primary-fixed hover:bg-primary/10 transition-colors">Manage</button>
+</div>
+<div class="space-y-4">
+<!-- Notice Card 1 -->
+<div class="bg-surface-container-lowest border-l-4 border-primary p-6 rounded-r-lg shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-lg text-on-surface">Annual General Meeting 2024</h4>
+<span class="text-[10px] text-on-surface-variant font-medium">2 hours ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-4">Mandatory attendance for all flat owners. Discussing upcoming parking renovations and maintenance fee revision.</p>
+<div class="flex items-center gap-4 text-xs font-semibold text-primary">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="event">event</span> Oct 24, 2023</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span> 10:30 AM</span>
+</div>
+</div>
+<!-- Notice Card 2 -->
+<div class="bg-surface-container-lowest border-l-4 border-secondary p-6 rounded-r-lg shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-bold text-lg text-on-surface">Society Cultural Festival</h4>
+<span class="text-[10px] text-on-surface-variant font-medium">1 day ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-4">Join us for the Diwali celebration. Performance slots are open for children. Contact the office to register.</p>
+<div class="flex items-center gap-4 text-xs font-semibold text-secondary">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="celebration">celebration</span> Nov 12, 2023</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Actions Grid -->
+<section class="bg-surface-container-high rounded-lg p-10">
+<h3 class="text-xl font-bold mb-8 text-center uppercase tracking-widest text-on-surface-variant">Administrative Controls</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<button class="bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center justify-center gap-3 hover:bg-primary group transition-all">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:text-white" data-icon="verified_user">verified_user</span>
+<span class="text-[11px] font-bold uppercase tracking-wider group-hover:text-white">Approve Visitor</span>
+</button>
+<button class="bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center justify-center gap-3 hover:bg-primary group transition-all">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:text-white" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-[11px] font-bold uppercase tracking-wider group-hover:text-white">Gen Invoice</span>
+</button>
+<button class="bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center justify-center gap-3 hover:bg-primary group transition-all">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:text-white" data-icon="engineering">engineering</span>
+<span class="text-[11px] font-bold uppercase tracking-wider group-hover:text-white">Assign Staff</span>
+</button>
+<button class="bg-surface-container-lowest p-6 rounded-lg flex flex-col items-center justify-center gap-3 hover:bg-primary group transition-all">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:text-white" data-icon="analytics">analytics</span>
+<span class="text-[11px] font-bold uppercase tracking-wider group-hover:text-white">View Reports</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white dark:bg-slate-900 shadow-[0_-4px_20px_rgba(0,0,0,0,05)] rounded-t-[2rem]">
+<a class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-2xl px-5 py-2 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500" href="#">
+<span class="material-symbols-outlined" data-icon="Assignment_Late">assignment_late</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Complaints</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Events</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-wider mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

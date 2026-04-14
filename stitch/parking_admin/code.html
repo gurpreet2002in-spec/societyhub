@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Elevated Living - Admin Parking Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#464555",
+              "outline-variant": "#c7c4d8",
+              "on-surface": "#191c1d",
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "on-secondary-fixed": "#002109",
+              "error": "#ba1a1a",
+              "surface-container": "#edeeef",
+              "secondary-fixed": "#6bff8f",
+              "primary": "#3525cd",
+              "on-secondary-container": "#007432",
+              "tertiary-fixed": "#ffdbcc",
+              "on-primary-container": "#dad7ff",
+              "inverse-on-surface": "#f0f1f2",
+              "tertiary": "#7e3000",
+              "secondary-fixed-dim": "#4ae176",
+              "on-primary-fixed": "#0f0069",
+              "on-primary-fixed-variant": "#3323cc",
+              "on-primary": "#ffffff",
+              "surface-dim": "#d9dadb",
+              "surface-bright": "#f8f9fa",
+              "surface-container-high": "#e7e8e9",
+              "tertiary-fixed-dim": "#ffb695",
+              "tertiary-container": "#a44100",
+              "secondary-container": "#6bff8f",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "outline": "#777587",
+              "on-tertiary-container": "#ffd2be",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#c3c0ff",
+              "secondary": "#006e2f",
+              "background": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "surface-tint": "#4d44e3",
+              "on-tertiary-fixed": "#351000",
+              "on-tertiary-fixed-variant": "#7b2f00",
+              "primary-container": "#4f46e5",
+              "primary-fixed-dim": "#c3c0ff",
+              "surface-container-low": "#f3f4f5",
+              "surface": "#f8f9fa",
+              "primary-fixed": "#e2dfff",
+              "on-secondary-fixed-variant": "#005321",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; }
+      .font-manrope { font-family: 'Manrope', sans-serif; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm shadow-indigo-500/5 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+<img alt="Resident Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a male professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb6JKYsfJt4xoyb2v59U9SZ6-0YlCqHMWgcLruUCNpsLSOO7u_H9SNDxvgWaQD9RP85hD7eUTtFPeMjQlYC50S22rcPOj0MP3lXmg17cXGuD-DW-ONTFE8GeJfUFKx3hGYSNBcot29goUoZTE8yxfzxEK5dG0NTUejX0aKFWdFroL8zouE2W01Nu7BPYVjt5HSL3TgzcQuhAwtQ2FWdXml2Xd_QAChuKhXwuKg6m4UpMmIo74Jbp9wwswKu-H4h9qFP14OXb_dAN8"/>
+</div>
+<h1 class="text-xl font-black text-slate-900 dark:text-white tracking-tighter font-manrope">Elevated Living</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 font-medium hover:text-indigo-500 transition-all font-manrope text-sm" href="#">Home</a>
+<a class="text-indigo-600 font-bold hover:text-indigo-500 transition-all font-manrope text-sm" href="#">Parking</a>
+<a class="text-slate-500 font-medium hover:text-indigo-500 transition-all font-manrope text-sm" href="#">Market</a>
+<a class="text-slate-500 font-medium hover:text-indigo-500 transition-all font-manrope text-sm" href="#">Profile</a>
+</nav>
+<button class="p-2 text-indigo-600 dark:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-7xl mx-auto space-y-12">
+<!-- Dashboard Header -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<span class="text-[0.6875rem] font-bold uppercase tracking-widest text-primary font-body">Facility Management</span>
+<h2 class="text-4xl font-extrabold tracking-tight font-manrope text-on-surface">Parking Control Center</h2>
+</div>
+<div class="flex gap-3">
+<div class="bg-surface-container-low px-6 py-3 rounded-full flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_10px_rgba(0,110,47,0.4)]"></div>
+<span class="text-sm font-semibold text-on-surface-variant">142 Available</span>
+</div>
+<div class="bg-surface-container-low px-6 py-3 rounded-full flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-error shadow-[0_0_10px_rgba(186,26,26,0.4)]"></div>
+<span class="text-sm font-semibold text-on-surface-variant">58 Occupied</span>
+</div>
+</div>
+</section>
+<!-- Main Content Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Parking Grid View -->
+<div class="lg:col-span-8 space-y-6">
+<div class="bg-surface-container-lowest rounded-lg p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-xl font-bold font-manrope">Level P1 - North Wing</h3>
+<div class="flex items-center bg-surface-container-low p-1 rounded-full">
+<button class="px-4 py-1.5 rounded-full bg-white shadow-sm text-xs font-bold text-primary">P1</button>
+<button class="px-4 py-1.5 rounded-full text-xs font-bold text-on-surface-variant">P2</button>
+<button class="px-4 py-1.5 rounded-full text-xs font-bold text-on-surface-variant">P3</button>
+</div>
+</div>
+<div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4">
+<!-- Parking Slots Loop -->
+<!-- Row 1 -->
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">A-101</span>
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+<div class="absolute inset-0 bg-secondary/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-primary transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-primary absolute top-2">A-102</span>
+<span class="material-symbols-outlined text-primary text-3xl">add_circle</span>
+<div class="absolute inset-0 bg-primary/5 rounded-xl"></div>
+</div>
+<!-- More slots -->
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">A-103</span>
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">A-104</span>
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">A-105</span>
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">A-106</span>
+<span class="material-symbols-outlined text-slate-300 text-3xl">local_parking</span>
+</div>
+<!-- Row 2 -->
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">B-201</span>
+<span class="material-symbols-outlined text-slate-300 text-3xl">local_parking</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">B-202</span>
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">electric_car</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">B-203</span>
+<span class="material-symbols-outlined text-slate-300 text-3xl">local_parking</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">B-204</span>
+<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">B-205</span>
+<span class="material-symbols-outlined text-slate-300 text-3xl">local_parking</span>
+</div>
+<div class="group relative aspect-[3/4] bg-surface-container-low rounded-xl flex flex-col items-center justify-center border-2 border-transparent hover:border-primary/20 transition-all cursor-pointer">
+<span class="text-[10px] font-bold text-slate-400 absolute top-2">B-206</span>
+<span class="material-symbols-outlined text-slate-300 text-3xl">local_parking</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Panel: Assign Slot -->
+<div class="lg:col-span-4">
+<div class="bg-surface-container-low rounded-lg p-8 h-full">
+<h3 class="text-xl font-bold font-manrope mb-6">Assign Slot A-102</h3>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant font-body px-1">Flat Number</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md px-6 py-4 focus:ring-2 focus:ring-primary transition-all placeholder:text-slate-400" placeholder="e.g. 402-B" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant font-body px-1">Vehicle Plate</label>
+<input class="w-full bg-surface-container-highest border-none rounded-md px-6 py-4 focus:ring-2 focus:ring-primary transition-all placeholder:text-slate-400" placeholder="ABC-1234" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant font-body px-1">Resident Name</label>
+<div class="bg-surface-container-highest rounded-md px-6 py-4 text-slate-400 text-sm">
+                                Auto-filled on Flat selection...
+                            </div>
+</div>
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-4 rounded-full font-bold text-sm tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-transform uppercase" type="submit">Confirm Assignment</button>
+</form>
+<div class="mt-8 p-4 rounded-xl bg-primary-fixed/30 border border-primary/10 flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+<p class="text-xs leading-relaxed text-on-primary-fixed-variant">Assigning a slot will automatically notify the resident via the mobile app and update their digital dashboard.</p>
+</div>
+</div>
+</div>
+<!-- Vehicle Registry Table -->
+<div class="lg:col-span-12">
+<div class="bg-surface-container-lowest rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
+<div class="p-8 border-b border-surface-container flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h3 class="text-xl font-bold font-manrope">Vehicle Registry</h3>
+<p class="text-sm text-on-surface-variant mt-1">Real-time status of all registered society vehicles.</p>
+</div>
+<div class="relative max-w-md w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-12 pr-6 py-3 bg-surface-container-low border-none rounded-full text-sm focus:ring-2 focus:ring-primary" placeholder="Search by vehicle, flat or resident..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">Resident</th>
+<th class="px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">Flat</th>
+<th class="px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">Vehicle Plate</th>
+<th class="px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">Slot ID</th>
+<th class="px-8 py-4 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">Status</th>
+<th class="px-8 py-4 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Sarah Miller" class="w-full h-full object-cover" data-alt="Portrait of a woman smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0Xq0Onirz1Wt-RHuA1CO61tpcmCkszbERxZDQTtvkDldXOgeGMdBfsuUX7XI5J7ht4XKS7XuAQ9ZMcmTgDrgmjY9V1-OGt4VmnFO-0KxPf4KPtNaUVjIhyaAKT06Lt9-mw1SxMtPNG_2WQkuFhYfqGxotYgKNhBuw2M3JZzC2UG-N5oVXMeW70PpoTp-PsrxKO-SJbgGae4PlphZP2DOvkHrdszZ4XJGggg5qHVqgrNnGGh4R9xiysZWxncehlj6hARdYN6sh8G8"/>
+</div>
+<span class="text-sm font-semibold">Sarah Miller</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm font-medium">102-A</td>
+<td class="px-8 py-5">
+<span class="bg-surface-container-highest px-3 py-1 rounded text-[11px] font-black tracking-widest border border-outline-variant/20">NY-772-XQ</span>
+</td>
+<td class="px-8 py-5 text-sm font-bold text-primary">A-101</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-container text-[10px] font-bold uppercase tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Inside
+                                        </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="David Chen" class="w-full h-full object-cover" data-alt="Portrait of a young man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1ehin8DT3r1REx4J04Gt1pW9d1sX6UBpdUgsMxI66CfwVurV71qtgSqXEK0-Z-0BaSQQEUfRyp19Pp9bpGjHr8DXGMe4AFBKVUtYDC0Oq3ZEb9rOeDxE-uBuPe5t3xvES59r6vVehLNm7AlEljbYdojIV2lYFMf8YgFoOLdQtFV7EjLpmjMjjDoIpdo2q690zsYJmzBLwELZ43K9vg9vHKLjVSkKZym4jHlydmsWns4h5MaPniDtivehPHF2HeRnITRXuj3rk0Vg"/>
+</div>
+<span class="text-sm font-semibold">David Chen</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm font-medium">305-C</td>
+<td class="px-8 py-5">
+<span class="bg-surface-container-highest px-3 py-1 rounded text-[11px] font-black tracking-widest border border-outline-variant/20">CA-990-LP</span>
+</td>
+<td class="px-8 py-5 text-sm font-bold text-primary">B-202</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Out
+                                        </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Marcus Wright" class="w-full h-full object-cover" data-alt="Portrait of a businessman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDujCiRns5axKHcoG7p4k1-5q8cGpZvdggBx21RPB5AQbZ7vOEGGk6583VCv6ASAKFrnih7GatsCowgXOLUSfzE_WF559_zMl1CHoHPAm1YyXxHfSMh-nXqRLVWRMF7VENflcEbSNJVT6PtnExn0lN2hjHD7Wwh_hwVv51_h40vbhIik3tmB90f4fUnObEXzNBoVbSY6RNu7WBzvKoVBou92V4XmC2y2o0xTrjunJOitrfq7LlqdyJeKMi6cQ6x0N37BLbzZnnMcT0"/>
+</div>
+<span class="text-sm font-semibold">Marcus Wright</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm font-medium">501-B</td>
+<td class="px-8 py-5">
+<span class="bg-surface-container-highest px-3 py-1 rounded text-[11px] font-black tracking-widest border border-outline-variant/20">TX-120-ZZ</span>
+</td>
+<td class="px-8 py-5 text-sm font-bold text-primary">A-104</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-container text-[10px] font-bold uppercase tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Inside
+                                        </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-400">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-[2.5rem]">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">home_app_logo</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-2xl px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Parking</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

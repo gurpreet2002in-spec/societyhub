@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Marketplace Listing Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#464555",
+              "outline-variant": "#c7c4d8",
+              "on-surface": "#191c1d",
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "on-secondary-fixed": "#002109",
+              "error": "#ba1a1a",
+              "surface-container": "#edeeef",
+              "secondary-fixed": "#6bff8f",
+              "primary": "#3525cd",
+              "on-secondary-container": "#007432",
+              "tertiary-fixed": "#ffdbcc",
+              "on-primary-container": "#dad7ff",
+              "inverse-on-surface": "#f0f1f2",
+              "tertiary": "#7e3000",
+              "secondary-fixed-dim": "#4ae176",
+              "on-primary-fixed": "#0f0069",
+              "on-primary-fixed-variant": "#3323cc",
+              "on-primary": "#ffffff",
+              "surface-dim": "#d9dadb",
+              "surface-bright": "#f8f9fa",
+              "surface-container-high": "#e7e8e9",
+              "tertiary-fixed-dim": "#ffb695",
+              "tertiary-container": "#a44100",
+              "secondary-container": "#6bff8f",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "outline": "#777587",
+              "on-tertiary-container": "#ffd2be",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#c3c0ff",
+              "secondary": "#006e2f",
+              "background": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "surface-tint": "#4d44e3",
+              "on-tertiary-fixed": "#351000",
+              "on-tertiary-fixed-variant": "#7b2f00",
+              "primary-container": "#4f46e5",
+              "primary-fixed-dim": "#c3c0ff",
+              "surface-container-low": "#f3f4f5",
+              "surface": "#f8f9fa",
+              "primary-fixed": "#e2dfff",
+              "on-secondary-fixed-variant": "#005321",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm shadow-indigo-500/5 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-headline text-lg font-bold tracking-tight text-slate-900">Marketplace</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-600">share</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-600">favorite</span>
+</button>
+</div>
+</header>
+<main class="pt-[72px] pb-32">
+<!-- Image Gallery / Carousel -->
+<section class="relative px-4 md:px-6">
+<div class="flex overflow-x-auto gap-4 no-scrollbar snap-x snap-mandatory">
+<div class="min-w-full md:min-w-[70%] h-80 md:h-[500px] rounded-lg overflow-hidden snap-center">
+<img class="w-full h-full object-cover" data-alt="Modern olive green velvet sofa in bright living room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBCKJ_8TfllTiU21AWBPEgWA75vZnZ5J-lYDl16e2dCEPRKXo9t1lko9T-PEHfLhMJa8zSYu_bt7Li0O6hCTYvuCBmkGoWn2fl6B6oQTOknPAjL2ttwz6RcQruuig-9H0AN8giFUs5x-e6LROnb3wDTkSE1hJtiHskCgxzuaNYKmwpd_wsdXK3iRKafJDXl-oLrkNoUtVoEZQ6kzL9dKLa4NbPbf_Id-68Pv2RN7HMu17smKeeiWhh2gkRGHx3bwhRJCQwx46e4OQ"/>
+</div>
+<div class="min-w-full md:min-w-[70%] h-80 md:h-[500px] rounded-lg overflow-hidden snap-center">
+<img class="w-full h-full object-cover" data-alt="Close up of high quality sofa upholstery fabric" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVlYajzaX1P2dvG7vifdRPuqymDLyn4oL4cyb76_C_xOkpSVa4YU_U4JG5Pm3FiabcI5cpj-D0SUXREVJFAGqrR579acdAlfDjlytV23jyHFWjNuMY3dbbPCs1-3FmlLTTsw0fTcGBMJVWctHAQaPinA3U_rPgO6LP7nPjqzoLEIIPLMDuw3mT5pkAyI3fintDq-XAXgwT8CjXUhUq16vaaCRT6i-rJAamDfPEu01mYq5B8plCoP56zlkFnlCFvnfPS0xPyrjwt7I"/>
+</div>
+<div class="min-w-full md:min-w-[70%] h-80 md:h-[500px] rounded-lg overflow-hidden snap-center">
+<img class="w-full h-full object-cover" data-alt="Sofa viewed from the side in a minimalist room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfF6kP_imljQfMP507BLIFxZQW6ftcHov1Wl6icW4Uy40fHY6bFc8DbyiHr8PL3fQQEECbZA8EFopUia1ZuPqYhMqK6qVZg7rC97qvu14MSk7kmU1S7uwMIrgchYd6SyA5AGDDEwkxqRFXvOCjQ31CmtCBadiGh0_DpBzCDU5et-dNFkUc91G33HG1nujJXGw4yrFwWyrPHe9KIGyi0zjVKNStP-uL5LpwmvkjoV1xb9PernyWFIMCxQwU4HOcUCYrGc-PAGvCB-s"/>
+</div>
+</div>
+<!-- Pagination Indicator -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 px-3 py-1.5 bg-black/20 backdrop-blur-md rounded-full">
+<div class="w-2 h-2 rounded-full bg-white"></div>
+<div class="w-2 h-2 rounded-full bg-white/40"></div>
+<div class="w-2 h-2 rounded-full bg-white/40"></div>
+</div>
+</section>
+<!-- Product Header Information -->
+<section class="mt-8 px-6">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-container text-[10px] font-bold uppercase tracking-widest rounded-full">Home Decor</span>
+<span class="text-on-surface-variant font-label text-sm">Posted 2 days ago</span>
+</div>
+<h2 class="font-headline text-3xl font-extrabold text-on-surface tracking-tight leading-tight mt-2">Premium Olive Velvet Sofa</h2>
+<p class="font-headline text-2xl font-black text-primary tracking-tighter">$850.00</p>
+</div>
+</section>
+<!-- Bento Grid Details -->
+<section class="mt-8 px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-low p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2">
+<span class="material-symbols-outlined text-primary">event_seat</span>
+<span class="font-label text-xs uppercase tracking-wider text-on-surface-variant">Seating</span>
+<span class="font-headline font-bold text-on-surface">3-Seater</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2">
+<span class="material-symbols-outlined text-primary">palette</span>
+<span class="font-label text-xs uppercase tracking-wider text-on-surface-variant">Color</span>
+<span class="font-headline font-bold text-on-surface">Olive Green</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2">
+<span class="material-symbols-outlined text-primary">texture</span>
+<span class="font-label text-xs uppercase tracking-wider text-on-surface-variant">Material</span>
+<span class="font-headline font-bold text-on-surface">Velvet</span>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="font-label text-xs uppercase tracking-wider text-on-surface-variant">Condition</span>
+<span class="font-headline font-bold text-on-surface">Like New</span>
+</div>
+</section>
+<!-- Description -->
+<section class="mt-8 px-6">
+<h3 class="font-headline text-xl font-bold text-on-surface mb-4">Description</h3>
+<p class="text-on-surface-variant leading-relaxed font-body">
+                Moving out and selling this beautiful, premium olive green velvet sofa. It was purchased less than a year ago from a boutique designer and is in pristine condition. No stains, tears, or signs of wear. <br/><br/>
+                The fabric is highly durable and soft to the touch. It features brushed brass legs that add a touch of luxury to any living space. Perfect for residents looking to upgrade their home aesthetic.
+            </p>
+</section>
+<!-- Seller Information Card -->
+<section class="mt-10 px-6">
+<div class="bg-surface-container-lowest p-6 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img class="w-16 h-16 rounded-full object-cover" data-alt="Portrait of Alex Johnson, a premium resident" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA2-3e6U0iFPHJN8KbCoeFjJzquCWtFD18G6jb7CO11JS937xBwOd84JX8tiuvCaZnGUZCqmn9g7snmgrjkjmjJcpesetNiyo9BvMQif7pkajqJa3SOarKEEUMo0Gf29jZrjyBOm2J_gMht6_IR_DEKe7K1aAUMg_fxJT05MHD7kVR6XjTZwVKrOGzg0rmr9oisChB8KHG5cZeBQBKekkJmdqd3Pzlk6BulF2Tky5dStHQSw-6xiBUYkiFZgQCb7SKoJ0o49xdE24"/>
+<div class="absolute -bottom-1 -right-1 bg-secondary-fixed text-on-secondary-fixed rounded-full p-1 border-2 border-white">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<h4 class="font-headline font-bold text-lg text-slate-900 leading-none">Alex Johnson</h4>
+<p class="text-slate-500 text-sm mt-1">Apartment 402-B • Premium Resident</p>
+</div>
+</div>
+<div class="hidden md:block">
+<div class="flex flex-col items-end">
+<span class="text-xs font-label uppercase text-slate-400 tracking-widest">Trust Score</span>
+<div class="flex gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Related Items (Editorial Style) -->
+<section class="mt-12 px-6">
+<h3 class="font-headline text-xl font-bold text-on-surface mb-6">Similar Listings</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container-low mb-3">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Mid-century modern accent chair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrUXMdsL5gn50Rdz2S26DW0rvQE5uccPEnrw5XvolkKIkjJP8zAqnivyjlQgsmF7yraJxXfs9Cram7UxP5fSj6J9bmNNqImZtxosc3kR-kW3XMt0_oJyxZEs6zMWtqhtvqCTItQGr13ELaleE9s9TBoOY8Q5eZ2kR_P5J6V1NYTv94rW-H06VRBuUa0FwPXA8gFoAxy6JW1RghJYAbfVuXOmz1L1U7Mjq5b90JRqLNKiDYA3brbIfFRc-OSpfQwS3Z_lrUI7ngAMo"/>
+</div>
+<p class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">Oak Accent Chair</p>
+<p class="text-primary font-bold text-sm">$210.00</p>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square rounded-lg overflow-hidden bg-surface-container-low mb-3">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Brushed metal floor lamp with minimalist design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwE9VHfN083qcKw3N9r7S8uL4Q8U4O5Ar4o6iFWC_LR8P-oRT-32OXjTkQnTNPvnAU97lOgh4B2UIoglYOVmNbHzaOPAPdbQ_mxXqLb6kegMkx2_9TsMxbM-BVT3B2oj74WDzX3ARUvC4mf2_Zp9nnPs_NWOmzd6HIoeUZaRRbFIF_nzA2qLPam0eqhqqX68NeXq4iZwTaFlcJM_36QgQEj62irX6jB17eNXf-7SGBlaxPVTcbzULJSJ-GT9PsL3ZuH3hpPeVNHkY"/>
+</div>
+<p class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">Minimal Floor Lamp</p>
+<p class="text-primary font-bold text-sm">$85.00</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Contact Bar -->
+<footer class="fixed bottom-0 left-0 w-full z-50 bg-white/90 backdrop-blur-lg px-6 py-5 shadow-[0_-8px_30px_rgb(0,0,0,0.04)] flex items-center gap-3">
+<button class="flex-1 bg-surface-container-high text-on-secondary-container h-14 rounded-full flex items-center justify-center gap-2 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined text-xl">chat_bubble</span>
+<span class="font-label text-sm font-bold uppercase tracking-widest">Message</span>
+</button>
+<button class="flex-1 bg-secondary text-white h-14 rounded-full flex items-center justify-center gap-2 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined text-xl">add_comment</span>
+<span class="font-label text-sm font-bold uppercase tracking-widest">WhatsApp</span>
+</button>
+<button class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center active:scale-95 transition-all duration-200 shadow-lg shadow-indigo-500/20 bg-gradient-to-br from-primary to-primary-container">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</footer>
+</body></html>

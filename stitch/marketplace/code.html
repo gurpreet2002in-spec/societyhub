@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#464555",
+              "outline-variant": "#c7c4d8",
+              "on-surface": "#191c1d",
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1d",
+              "surface-variant": "#e1e3e4",
+              "on-secondary-fixed": "#002109",
+              "error": "#ba1a1a",
+              "surface-container": "#edeeef",
+              "secondary-fixed": "#6bff8f",
+              "primary": "#3525cd",
+              "on-secondary-container": "#007432",
+              "tertiary-fixed": "#ffdbcc",
+              "on-primary-container": "#dad7ff",
+              "inverse-on-surface": "#f0f1f2",
+              "tertiary": "#7e3000",
+              "secondary-fixed-dim": "#4ae176",
+              "on-primary-fixed": "#0f0069",
+              "on-primary-fixed-variant": "#3323cc",
+              "on-primary": "#ffffff",
+              "surface-dim": "#d9dadb",
+              "surface-bright": "#f8f9fa",
+              "surface-container-high": "#e7e8e9",
+              "tertiary-fixed-dim": "#ffb695",
+              "tertiary-container": "#a44100",
+              "secondary-container": "#6bff8f",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#2e3132",
+              "outline": "#777587",
+              "on-tertiary-container": "#ffd2be",
+              "on-tertiary": "#ffffff",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#c3c0ff",
+              "secondary": "#006e2f",
+              "background": "#f8f9fa",
+              "surface-container-highest": "#e1e3e4",
+              "surface-tint": "#4d44e3",
+              "on-tertiary-fixed": "#351000",
+              "on-tertiary-fixed-variant": "#7b2f00",
+              "primary-container": "#4f46e5",
+              "primary-fixed-dim": "#c3c0ff",
+              "surface-container-low": "#f3f4f5",
+              "surface": "#f8f9fa",
+              "primary-fixed": "#e2dfff",
+              "on-secondary-fixed-variant": "#005321",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, #3525cd 0%, #4f46e5 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm shadow-indigo-500/5 flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Resident Profile Avatar Alex" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvzkwO4aCenXHokLBAofpGYFLxiX_n7_2ycQbatUfMa6aHDIGLYXyUjJiyi2s1FbnhbbQx27yYN-RGiItSzUSR1x-aAwBGnN_QN2Ho-KHHoDV6ja_v9oi6Sbs9tokF2iEesoISg20Zwon_uQu78ou0B1HnMveIF8rgk5Jthdlg8fG3FeLuDXB0d6OeX3Gzcmu80XQmmvptrWUvTYC7fAJzhjUTbAARlorMeSCLNevdiHutJgraSqmaVhzwHBHWFdVAJ-RcU8AE-eg"/>
+</div>
+<span class="font-manrope text-lg font-bold tracking-tight text-slate-900 dark:text-white">Elevated Living</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-indigo-600 dark:text-indigo-400">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-7xl mx-auto">
+<!-- Search and Context -->
+<div class="mb-10">
+<h1 class="font-manrope text-3xl font-extrabold tracking-tight mb-6">Marketplace</h1>
+<div class="flex flex-col md:flex-row gap-4">
+<div class="relative flex-grow group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 font-medium text-on-surface" placeholder="Search items, property or services..." type="text"/>
+</div>
+<button class="flex items-center justify-center gap-2 px-6 py-4 bg-surface-container-high rounded-xl font-bold text-on-surface hover:bg-surface-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">tune</span>
+<span class="label-sm uppercase tracking-wider text-[11px]">Filters</span>
+</button>
+</div>
+</div>
+<!-- Category Tabs -->
+<div class="flex items-center gap-2 mb-10 overflow-x-auto pb-2 no-scrollbar">
+<button class="px-8 py-3 bg-primary text-white rounded-full font-bold text-sm whitespace-nowrap shadow-lg shadow-primary/20">Items</button>
+<button class="px-8 py-3 bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high rounded-full font-semibold text-sm whitespace-nowrap transition-colors">Property</button>
+<button class="px-8 py-3 bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high rounded-full font-semibold text-sm whitespace-nowrap transition-colors">Services</button>
+<button class="px-8 py-3 bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high rounded-full font-semibold text-sm whitespace-nowrap transition-colors">My Ads</button>
+</div>
+<!-- Marketplace Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<!-- Item Card 1 -->
+<div class="group bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Blue iPhone 13 smartphone like new" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcZgHR-tgvRy1o0DZkVrtCVIju-HT0EpHXBeCWRBVn1FmaQ04HdJzqaKiSoVCVqMRIkKoxp9bkPesvjbWfhGc8SoEJSoLlHuBnMOJsyxoAy5HIxW2Qtxye497gtFvYZmY1fgi1g8Xy1aktd7iXVXlXqCD_9d63eNGoDMqZYGcO9fam7DeJKXXjRPeQ2hoZC2imczVipDXaXWlGeIum7kESJvA3F0wrnWiIbW-8aCM3dfx_3UVNWQMenktzR-zcjGaLa5xFWJqqXHY"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900">2 hours ago</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-manrope font-bold text-lg leading-tight text-slate-900">iPhone 13 - Like New</h3>
+</div>
+<div class="text-primary font-extrabold text-xl mb-4">₹45,000</div>
+<div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Seller Profile Rahul" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBfgCRFtl_oAfFapzcatAxt6j_o4lpmeRILQ_fjflIbtz-iPPY1CpVfJWF9uvZ13X2A0vjkLuiaPkrAr7lTeAgm7rnJCUvYq5_Mxm99kkTBEodnvagpOVJ_X0_MXA1gNXvXKcgETPuexJZ-F2GsO-ihbeHoFNVSuYDnfK0OBNA61vEHdwvn5h0VP2Dfspx7CId9i4FWR47cd-QYvjJW88PJtC-56l055yasXSzyy5CAlFQe7cU3Sc_lrzkUEWlm4AEx9MDqUtGPpI"/>
+</div>
+<span class="text-xs font-semibold text-slate-500">Rahul • 402-B</span>
+</div>
+<button class="text-primary-container"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span></button>
+</div>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="group bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Premium Wireless Over-Ear Headphones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn895PZnwL4lgAr6vSatJK_fw4UlFsmhDfxiRnB9fMunIAnpg4gcZ8W2P9hTggRqPnCy8zC04Gwk0LQDXSL9PcojI1vL0s7p3k96g1E-2THPjkP0qpmXg2HFZcqegRpb5jjOl3Yl3tvWru6810vYqWz64ytmLxaQEdCNIQ4Q9pdJls_SHR9MzwdhnscijjquC5N5p6ick4fs26feXhwpX2zamF-VX-suvUkM1eksik76-63PB9Uei1zom47FrH5IjcgtcQLfZ6LEk"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900">5 hours ago</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-manrope font-bold text-lg leading-tight text-slate-900">Sony WH-1000XM4</h3>
+</div>
+<div class="text-primary font-extrabold text-xl mb-4">₹18,500</div>
+<div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Seller Profile Priya" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGzX7unWV9OmucU5Tu0jae_erK7KdfEHwZlh2iBGDbfFNksAmZcSVF-wdV-ncOwDUiJaD1vZuAHNZKAgTriYLc6cxam78KxOa4QnbUU2wKQU41556tx_1QZLocd3fehVkCVbzNefD5fPBTX7wJ4w_9r82pe4vv0xg5aWJsC3x2SnzX73AdNUP6c4pvqCxXsU_5VIAVx9MNT6D7MXkyhSQNPrHDiPJtJY95zeOQpftgglKX4h4qyDz51EBb7-6aICTENUAgQUdtvnk"/>
+</div>
+<span class="text-xs font-semibold text-slate-500">Priya • 101-C</span>
+</div>
+<button class="text-primary-container"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span></button>
+</div>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="group bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Red Nike Running Shoes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCczhfJC_i1LY8xWDWB-83XQQyNr-Z51r9p7a2NeYe58VOexJT-OF3SaY75K0332EOtJHqs0fR86J_R_qegjnwf-Fj8juu7-JzVWjvxWI4Muj-PBPjnQxJk-xDtXISAosl9HTdw1Bajw8VezfPBBIfQ1UXbE4zB1rMGa178Iydhz9YMhYikld7q8k17lm3aW0DCTP1lJoRO9XKDLeT2nsdRdyW3NyC1PW8e3WHz6RjyChWN8db_gNy5ituTjB9ZbuLTJI9-nC2tagM"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900">Yesterday</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-manrope font-bold text-lg leading-tight text-slate-900">Nike Air Zoom - Size 9</h3>
+</div>
+<div class="text-primary font-extrabold text-xl mb-4">₹3,200</div>
+<div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Seller Profile Amit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq-MYcz2Nz2v48OlVN4VW7eos-nd_aAYk2WDivVuJRxRSs1e-muDa3iGIH70Mw-f-vYplI4uj67LR1z2fCOnyujW-_f1iTqx9pLaeuEPZJK7zAiDLkGBCNZI7MKDEb623GUBTTkxMLk1Sr64FjnHvVAVkwqWlkC-wG3R6KNq7CjDeBAxWr9DZ_RoiFE36mwmOyinXBP7DCA4a_0JSv3Yfj0xb3_k4JuUhT-WUz1GNnLhhW2aMAkkzKHbfcePZKBEs2CiuOV3xy528"/>
+</div>
+<span class="text-xs font-semibold text-slate-500">Amit • 804-A</span>
+</div>
+<button class="text-primary-container"><span class="material-symbols-outlined">favorite</span></button>
+</div>
+</div>
+</div>
+<!-- Item Card 4 -->
+<div class="group bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Childrens Wooden Toy Set" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcbM68qX0beFAoZZoY5U-E4rDN4MiiLpSVcZnzZzAJBcfZKMnU1rH2HTVQPDCMYT857KC1BQ-ObM6WvbhN0bLZRo7IAMnLZsp6tEqXZHVnPU2eaquEtki3XfNc6fPos6P3gIc1Zg0lGx878oRSlq4jHMjS7UozGykyEiuVThl9_t_YQE1wRXJAfwVjz3BaWobmy6FQGadz2fTZaw6f8DcFO671YhpW5AurXCyvRepoy0iRJbaTLDhX72gak0YBmdivNZQBvg4ogFU"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900">Just Now</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-manrope font-bold text-lg leading-tight text-slate-900">Wooden Toy Train Set</h3>
+</div>
+<div class="text-primary font-extrabold text-xl mb-4">₹850</div>
+<div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Seller Profile Sarah" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPdLpOnmM2gezZIalPuNPnh7Sp546csHGzmhAEhudyyM6A4vAaIiRuGbTIlLku9sJfueCUeGNUa8zGFTHn3BNZGVL36AH89JUip9Eb0YRcNlhB584ObYN-IzHejwEMuYIIIa1cpbXd8Jy7VEKrHqScl1x3-DlE2pcU6J6qnRmnF3qVzYuKgPF0fftUg8-iydZeaZehupFPCqGTabR_y0vyTqr6i7h5UTyNo4tESdB-2hkyAkwXt_62XXI-7Q64ztJ2-C5TLiSTzbM"/>
+</div>
+<span class="text-xs font-semibold text-slate-500">Sarah • 205-D</span>
+</div>
+<button class="text-primary-container"><span class="material-symbols-outlined">favorite</span></button>
+</div>
+</div>
+</div>
+<!-- Item Card 5 -->
+<div class="group bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Standing Modern Desk Lamp" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC1qSA2A6f1d0tYsYesHzZEvscvGuRVm849gvt_-bgTPwQ6RTZ9d3oANHmSAM-UowKFokXMbNlkRnP6NB6DgGdCrhjIBiwbpaeKF6R7pryza7n4j02_OcGcc1T2bSAOcGunndi5G7R_XT5C7DhICuDXuAGxIAbgosL7yH2qGq5BDxo4ExzEN8CEd6MLa_QcNDpG6z0sF50xAb7kdVbupY-KF0OEKH4esYhIcNRyFziz7zJA0i_b85GPeFPJCPGoF5Whlrr4Ao7JZg"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900">4 hours ago</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-manrope font-bold text-lg leading-tight text-slate-900">Nordic Standing Lamp</h3>
+</div>
+<div class="text-primary font-extrabold text-xl mb-4">₹2,400</div>
+<div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Seller Profile Vikram" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6VyygBFtLSZjZ1-ZnVKViFRHb77fi92fnc71Buea2vv5aRoejNevMfwfluzD3uw6WEi-4TUZ6qYW1yb__bmmjY6iQugAEaIxADfsBLgiAvdFsMtfaDohSBlJfOSgP8sq8dC0Y69a94ThZUDQ0IMoeslZGdc7ByW8DKuCzEpuhzfbt9Gm-1Z0Ly6wSAFHsVmn7_eRM-mTRwRl3FXWk8ZPcOGprtMfN1zcZIUIB2YOf0nY9sl1--m09tpLBXizsgUjijOR64_GfG8w"/>
+</div>
+<span class="text-xs font-semibold text-slate-500">Vikram • 501-A</span>
+</div>
+<button class="text-primary-container"><span class="material-symbols-outlined">favorite</span></button>
+</div>
+</div>
+</div>
+<!-- Item Card 6 -->
+<div class="group bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+<div class="relative aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Gaming PC Setup Components" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbE5XgZhMv0Er8r4HehXMchZXD447sqKrRhSTI35zpHF96mYblQkbpJ7RXCaoBb2E5H9WaGiDs8DGnZCP0mti45rdrwHJGhf51SDUfQiW9uCSpHUMRR5bqxfX3EY-dXzbWM0nmXPHZ0CRgAmyXFF38LFDFkOVwcLDZbYSnMN3eKdb625ubpd5IC657bAVLThwphPsTkzj7ohVSUMTUD64D1pDm3SlxuWpJUnhL35MSxXbJACUPPGb2dQx-yBIkt3QkxkDk8nglUnA"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900">6 hours ago</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-manrope font-bold text-lg leading-tight text-slate-900">GTX 1660 Super GPU</h3>
+</div>
+<div class="text-primary font-extrabold text-xl mb-4">₹12,000</div>
+<div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Seller Profile Karan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYr6V8x2cV_4s7m4AmJx4248tr8SnVx5E5O1Kia_5HDxXL0wobjQu7BhxhCWId23F9ax0MGdcQe-SH7yP_DfAb-gS1IVuAa3XrFcwfYBUlndqtq5IcU0jwJmEct2XyqzFZme62st1F0XJOj8v1QcbwPywbGfDifT9McKUEQjZGRK6azjM4R5kKXmcT2_VctPxucJDzw9a6luijWgXoBjeW18WBv-Edkg3FrOWyd-VsP_Jxgw5rXsGIGG0eOe40VA2YCCpxkSh0Wpw"/>
+</div>
+<span class="text-xs font-semibold text-slate-500">Karan • 303-B</span>
+</div>
+<button class="text-primary-container"><span class="material-symbols-outlined">favorite</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Sell FAB -->
+<button class="fixed bottom-28 right-6 z-50 bg-primary-gradient text-white px-8 py-4 rounded-full flex items-center gap-3 shadow-2xl shadow-indigo-500/40 active:scale-90 transition-all duration-300">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-manrope font-bold uppercase tracking-widest text-sm">Sell Item</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-8px_30px_rgb(0,0,0,0.04)] rounded-t-[2.5rem]">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="home_app_logo">home_app_logo</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="local_parking">local_parking</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Parking</span>
+</div>
+<!-- Active Tab: Market -->
+<div class="flex flex-col items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-2xl px-5 py-2 active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="storefront" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-indigo-500 transition-all active:scale-90 duration-300 ease-out">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-inter text-[10px] font-semibold uppercase tracking-widest mt-1">Profile</span>
+</div>
+</nav>
+</body></html>
