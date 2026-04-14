@@ -4,14 +4,20 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Sequelize, DataTypes } = require('sequelize');
-const path = require('path');
-const crypto = require('crypto');
-const Razorpay = require('razorpay');
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_mock',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || 'rzp_test_secret',
-});
+// Use PostgreSQL if DATABASE_URL is provided (Railway), otherwise SQLite
+const isPostgres = process.env.DATABASE_URL?.startsWith('postgres');
+
+const sequelize = isPostgres
+  ? new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      logging: false,
+    })
+  : new Sequelize({
+      dialect: 'sqlite',
+      storage: path.join(__dirname, 'database.sqlite'),
+      logging: false,
+    });
 
 const app = express();
 

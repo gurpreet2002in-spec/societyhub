@@ -31,6 +31,8 @@
     "react-router-dom": "^7.6.0",
     "recharts": "^2.15.3",
     "sequelize": "^6.37.8",
+    "pg": "^8.11.0",
+    "pg-hstore": "^2.3.4",
     "sqlite3": "^6.0.1"
   },
   "devDependencies": {
