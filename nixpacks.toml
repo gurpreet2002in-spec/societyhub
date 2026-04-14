@@ -1,0 +1,5 @@
+[build]
+exclude = ["society_hub/*", "node_modules/*", ".git"]
+
+[start]
+command = "node server.js"

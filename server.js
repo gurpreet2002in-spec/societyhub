@@ -371,8 +371,8 @@ async function createNotification(userId, societyId, title, body, type = 'genera
   }
 }
 
-sequelize.sync({ alter: true }).then(async () => {
-  console.log('SQLite Database connected and synchronized.');
+sequelize.sync({ force: false }).then(async () => {
+  console.log('Database synchronized.');
   
   // Seed a default Society and block for testing if none exist
   const societyCount = await Society.count();
