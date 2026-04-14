@@ -22,7 +22,9 @@ app.use(express.json());
 // Serve static files from the React app (removed to prevent ENOENT crashes)
 // app.use(express.static(path.join(__dirname, 'client', 'build')));
 
-const PORT = process.env.PORT || 5000;
+// Railway provides these environment variables
+const PORT = process.env.PORT || process.env.RAILWAY_PUBLIC_PORT || 5000;
+const HOST = process.env.HOST || '0.0.0.0';
 
 // SQLite Connection
 const sequelize = new Sequelize({
@@ -1654,11 +1656,15 @@ app.put('/api/notifications/read-all', auth, async (req, res) => {
   } catch (e) { res.status(400).send({ error: e.message }); }
 });
 
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.get('*', (req, res) => {
   res.json({ message: "SocietyHub API is running." });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} with SQLite database`);
+// Start server - Railway provides $PORT env var
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
 });
