@@ -132,6 +132,34 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                     style: TextButton.styleFrom(foregroundColor: colors.primary),
                   ),
                   const SizedBox(width: 8),
+                  if (!isActive) ...[
+                    TextButton.icon(
+                      onPressed: () async {
+                        try {
+                          await ref.read(apiServiceProvider).superAdminUpdateSociety(
+                            soc['id'], 
+                            name: soc['name'], 
+                            address: soc['address'], 
+                            city: soc['city'],
+                            subscriptionStatus: 'active', 
+                            subscriptionPlan: soc['subscriptionPlan'] ?? 'basic',
+                          );
+                          ref.invalidate(superAdminSocietiesProvider);
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Society Unsuspended successfully'), backgroundColor: Colors.green)
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+                        }
+                      },
+                      icon: const Icon(Icons.play_circle_filled_rounded, size: 18),
+                      label: const Text('Unsuspend'),
+                      style: TextButton.styleFrom(foregroundColor: Colors.green),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
                   PremiumButton(
                     onPressed: () => _showEditSocietyDialog(context, soc),
                     label: 'Manage Setup',
