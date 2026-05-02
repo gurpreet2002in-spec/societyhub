@@ -103,6 +103,9 @@ class SupabaseApiService extends ApiService {
       // If no session (email confirmation ON) → user must confirm email first
       if (res.session != null) {
         try {
+          // Clear any orphaned or pre-existing records with this email to avoid UNIQUE constraint violations
+          await _db.from('users').delete().eq('email', email);
+          
           await _db.from('users').upsert({
             'id': userId,
             'name': name,
