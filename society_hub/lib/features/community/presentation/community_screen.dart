@@ -266,8 +266,8 @@ class _PollsTab extends ConsumerWidget {
           itemCount: polls.length,
           itemBuilder: (ctx, i) {
             final p = polls[i] as Map<String, dynamic>;
-            final options = (p['options'] as List<dynamic>).cast<String>();
-            final voteCounts = (p['voteCounts'] as List<dynamic>).cast<int>();
+            final options = ((p['options'] as List<dynamic>?) ?? []).cast<String>();
+            final voteCounts = ((p['voteCounts'] as List<dynamic>?) ?? []).cast<int>();
             final totalVotes = p['totalVotes'] as int? ?? 0;
             final userVote = p['userVote'] as int?;
             final hasVoted = userVote != null;

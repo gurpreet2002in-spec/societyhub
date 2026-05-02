@@ -78,7 +78,7 @@ class _SuperAdminReportsScreenState extends ConsumerState<SuperAdminReportsScree
             const SizedBox(height: 32),
             _buildSectionHeader('GROWTH MOMENTUM', theme),
             const SizedBox(height: 16),
-            ...((reports['growth'] as List).map((g) => _buildGrowthTile(g, theme))),
+            ...(((reports['growth'] as List?) ?? []).map((g) => _buildGrowthTile(g, theme))),
           ],
         ),
       ),
@@ -131,13 +131,14 @@ class _SuperAdminReportsScreenState extends ConsumerState<SuperAdminReportsScree
   }
 
   Widget _buildDistributionCard(dynamic dist, ThemeData theme) {
+    final safeDist = dist ?? {'free': 0, 'basic': 0, 'premium': 0};
     return Row(
       children: [
-        _distBox('Free', dist['free'] ?? 0, AppTheme.secondary, theme),
+        _distBox('Free', safeDist['free'] ?? 0, AppTheme.secondary, theme),
         const SizedBox(width: 16),
-        _distBox('Basic', dist['basic'] ?? 0, AppTheme.primary, theme),
+        _distBox('Basic', safeDist['basic'] ?? 0, AppTheme.primary, theme),
         const SizedBox(width: 16),
-        _distBox('Premium', dist['premium'] ?? 0, const Color(0xFF7E3000), theme),
+        _distBox('Premium', safeDist['premium'] ?? 0, const Color(0xFF7E3000), theme),
       ],
     );
   }
@@ -157,7 +158,8 @@ class _SuperAdminReportsScreenState extends ConsumerState<SuperAdminReportsScree
     );
   }
 
-  Widget _buildSocietyTable(List<dynamic> societies, ThemeData theme) {
+  Widget _buildSocietyTable(dynamic societiesData, ThemeData theme) {
+    final societies = (societiesData as List?) ?? [];
     return PremiumCard(
       padding: EdgeInsets.zero,
       child: SingleChildScrollView(
@@ -176,11 +178,11 @@ class _SuperAdminReportsScreenState extends ConsumerState<SuperAdminReportsScree
             DataColumn(label: Text('Tickets')),
           ],
           rows: societies.map((s) => DataRow(cells: [
-            DataCell(Text(s['name'], style: theme.textTheme.titleMedium)),
-            DataCell(Text(s['plan'].toString().toUpperCase(), style: theme.textTheme.labelMedium?.copyWith(color: AppTheme.primary))),
-            DataCell(Text(s['users'].toString())),
-            DataCell(Text('\u20B9${s['totalRevenue']}')),
-            DataCell(Text(s['tickets'].toString())),
+            DataCell(Text(s['name'] ?? '', style: theme.textTheme.titleMedium)),
+            DataCell(Text((s['plan'] ?? 'free').toString().toUpperCase(), style: theme.textTheme.labelMedium?.copyWith(color: AppTheme.primary))),
+            DataCell(Text((s['users'] ?? 0).toString())),
+            DataCell(Text('\u20B9${s['totalRevenue'] ?? 0}')),
+            DataCell(Text((s['tickets'] ?? 0).toString())),
           ])).toList(),
         ),
       ),

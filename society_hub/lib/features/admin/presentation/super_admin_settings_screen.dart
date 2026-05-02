@@ -103,7 +103,7 @@ class _SuperAdminSettingsScreenState extends ConsumerState<SuperAdminSettingsScr
                 _buildHeader('SUBSCRIPTION PLANS (READ-ONLY)', colors),
                 Text('To edit plans, tap individual tiers below:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.onSurface.withValues(alpha: 0.6))),
                 const SizedBox(height: 16),
-                ...(settings['plans'] as List).map((plan) => _buildPlanCard(plan, colors)),
+                ...((settings['plans'] as List?) ?? []).map((plan) => _buildPlanCard(plan, colors)),
                 
                 const SizedBox(height: 80),
               ],

@@ -335,7 +335,7 @@ class SupabaseApiService extends ApiService {
         .select('id')
         .eq('society_id', societyId)
         .eq('role', 'resident');
-    final rows = (residents as List).map((r) => {
+    final rows = ((residents as List?) ?? []).map((r) => {
       'title': title,
       'amount': amount,
       'tax_amount': taxAmount,
@@ -372,9 +372,9 @@ class SupabaseApiService extends ApiService {
     final invoices = await qInvoices;
 
     return {
-      'openComplaints': (complaints as List).length,
-      'visitorsToday': (visitors as List).length,
-      'pendingInvoices': (invoices as List).length,
+      'openComplaints': ((complaints as List?) ?? []).length,
+      'visitorsToday': ((visitors as List?) ?? []).length,
+      'pendingInvoices': ((invoices as List?) ?? []).length,
     };
   }
 
@@ -578,8 +578,8 @@ class SupabaseApiService extends ApiService {
     if (societyId != null) qPending = qPending.eq('society_id', societyId);
     final pending = await qPending;
 
-    double totalCollected = (paid as List).fold(0, (s, r) => s + (r['amount'] ?? 0));
-    double totalPending = (pending as List).fold(0, (s, r) => s + (r['amount'] ?? 0));
+    double totalCollected = ((paid as List?) ?? []).fold(0, (s, r) => s + (r['amount'] ?? 0));
+    double totalPending = ((pending as List?) ?? []).fold(0, (s, r) => s + (r['amount'] ?? 0));
     return {
       'totalCollected': totalCollected,
       'totalPending': totalPending,
@@ -594,7 +594,7 @@ class SupabaseApiService extends ApiService {
     var query = _db.from('complaints').select('status');
     if (societyId != null) query = query.eq('society_id', societyId);
     final all = await query;
-    final open = (all as List).where((r) => r['status'] == 'Open').length;
+    final open = ((all as List?) ?? []).where((r) => r['status'] == 'Open').length;
     final resolved = all.where((r) => r['status'] == 'Resolved').length;
     return {'total': all.length, 'open': open, 'resolved': resolved};
   }
@@ -611,7 +611,7 @@ class SupabaseApiService extends ApiService {
     var query = _db.from('users').select('id').eq('role', 'resident');
     if (societyId != null) query = query.eq('society_id', societyId);
     final flats = await query;
-    return {'occupied': (flats as List).length};
+    return {'occupied': ((flats as List?) ?? []).length};
   }
 
   // ── Notifications ─────────────────────────────────────────────────────────
@@ -630,7 +630,7 @@ class SupabaseApiService extends ApiService {
         .select('id')
         .eq('user_id', uid)
         .eq('is_read', false);
-    return (res as List).length;
+    return ((res as List?) ?? []).length;
   }
 
   Future<void> markNotificationRead(String id) async {
@@ -647,14 +647,34 @@ class SupabaseApiService extends ApiService {
     final societies = await _db.from('societies').select('id');
     final users = await _db.from('users').select('id');
     return {
-      'totalSocieties': (societies as List).length,
-      'totalUsers': (users as List).length,
+      'totalSocieties': ((societies as List?) ?? []).length,
+      'totalUsers': ((users as List?) ?? []).length,
     };
   }
 
   Future<Map<String, dynamic>> getSuperAdminSettings() async {
     final rows = await _db.from('platform_settings').select();
-    return {for (var r in (rows as List)) r['key']: r['value']};
+    final settings = <String, dynamic>{};
+    for (var r in ((rows as List?) ?? [])) {
+      try {
+        settings[r['key']] = jsonDecode(r['value']);
+      } catch (e) {
+        settings[r['key']] = r['value'];
+      }
+    }
+    
+    // Provide safe defaults to prevent UI crashes if table is empty
+    settings['platformName'] ??= 'SocietyHub Platform';
+    settings['supportEmail'] ??= 'support@societyhub.com';
+    settings['maintenanceMode'] ??= false;
+    settings['payment'] ??= {};
+    settings['plans'] ??= [
+      {'id': '1', 'name': 'Free Tier', 'price': 0},
+      {'id': '2', 'name': 'Basic Tier', 'price': 999},
+      {'id': '3', 'name': 'Premium Tier', 'price': 2999},
+    ];
+
+    return settings;
   }
 
   Future<List<dynamic>> getSuperAdminInvoices() async {
@@ -664,11 +684,17 @@ class SupabaseApiService extends ApiService {
   }
 
   Future<void> updateSuperAdminSetting(String key, dynamic value) async {
-    await _db.from('platform_settings').upsert({'key': key, 'value': value.toString()});
+    await _db.from('platform_settings').upsert({'key': key, 'value': jsonEncode(value)});
   }
 
   Future<Map<String, dynamic>> getSuperAdminReports() async {
-    return getSuperAdminStats();
+    final stats = await getSuperAdminStats();
+    return {
+      'planDistribution': {'free': 0, 'basic': 0, 'premium': 0},
+      'societies': [],
+      'growth': [],
+      ...stats,
+    };
   }
 
   Future<List<dynamic>> getSuperAdminLogs() async {
