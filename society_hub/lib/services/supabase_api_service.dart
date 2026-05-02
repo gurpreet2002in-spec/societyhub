@@ -645,11 +645,23 @@ class SupabaseApiService extends ApiService {
 
   // ── Super Admin Stats / Settings ──────────────────────────────────────────
   Future<Map<String, dynamic>> getSuperAdminStats() async {
-    final societies = await _db.from('societies').select('id');
+    final societies = await _db.from('societies').select('subscription_status');
     final users = await _db.from('users').select('id');
+    final invoices = await _db.from('invoices').select('amount, status');
+
+    final activeSocieties = ((societies as List?) ?? []).where((s) => s['subscription_status'] == 'active').length;
+    final totalUsers = ((users as List?) ?? []).length;
+    
+    final paidInvoices = ((invoices as List?) ?? []).where((i) => i['status'] == 'Paid');
+    final totalRevenue = paidInvoices.fold(0.0, (sum, i) => sum + (i['amount'] ?? 0).toDouble());
+    final pendingInvoices = ((invoices as List?) ?? []).where((i) => i['status'] == 'Pending').length;
+
     return {
-      'totalSocieties': ((societies as List?) ?? []).length,
-      'totalUsers': ((users as List?) ?? []).length,
+      'activeSocieties': activeSocieties,
+      'totalUsers': totalUsers,
+      'mrr': totalRevenue.toStringAsFixed(2), // Simplified MRR as total revenue for now
+      'totalRevenue': totalRevenue.toStringAsFixed(2),
+      'pendingInvoices': pendingInvoices,
     };
   }
 
