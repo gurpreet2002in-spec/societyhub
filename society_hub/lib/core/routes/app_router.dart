@@ -32,27 +32,28 @@ import '../../widgets/super_admin_shell_layout.dart';
 import '../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 
-final serverConfiguredProvider = FutureProvider<bool>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('serverUrl') != null;
-});
+// With Supabase, the server is always "configured" — no QR scan needed.
+final serverConfiguredProvider = FutureProvider<bool>((ref) async => true);
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final isAuth = ref.watch(authProvider);
 
   return GoRouter(
-    initialLocation: isAuth ? (ref.read(apiServiceProvider).user?['role'] == 'super_admin' ? '/super_admin/dashboard' : '/dashboard') : '/connect',
+    initialLocation: isAuth
+        ? (ref.read(apiServiceProvider).user?['role'] == 'super_admin'
+            ? '/super_admin/dashboard'
+            : '/dashboard')
+        : '/login',
     redirect: (context, state) {
       final location = state.matchedLocation;
-      final isConnect = location == '/connect';
       final isLogin = location == '/login';
+      final isConnect = location == '/connect';
 
-      final serverConfiguredAsync = ref.watch(serverConfiguredProvider);
-      final serverConfigured = serverConfiguredAsync.valueOrNull ?? false;
+      // Redirect away from the legacy /connect screen
+      if (isConnect) return isAuth ? '/dashboard' : '/login';
 
-      if (!serverConfigured && !isConnect) return '/connect';
-      if (serverConfigured && !isAuth && !isLogin && !isConnect) return '/login';
-      if (serverConfigured && isAuth && (isLogin || isConnect)) {
+      if (!isAuth && !isLogin) return '/login';
+      if (isAuth && isLogin) {
         final role = ref.read(apiServiceProvider).user?['role'];
         return role == 'super_admin' ? '/super_admin/dashboard' : '/dashboard';
       }

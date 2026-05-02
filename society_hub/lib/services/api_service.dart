@@ -2,8 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'supabase_api_service.dart';
 
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
+// ── apiServiceProvider now delegates to the Supabase implementation ──────────
+// All existing screens that watch(apiServiceProvider) get SupabaseApiService.
+final apiServiceProvider =
+    Provider<ApiService>((ref) => ref.watch(supabaseApiServiceProvider));
+
 
 class ApiService {
   // Development default - will be overridden by stored URL after QR scan

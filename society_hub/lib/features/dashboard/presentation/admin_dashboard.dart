@@ -91,7 +91,16 @@ class AdminDashboard extends ConsumerWidget {
                     asyncStats.when(
                       data: (stats) => _buildStatsBentoGrid(context, stats),
                       loading: () => _buildStatsLoadingSkeleton(),
-                      error: (_, __) => _buildStatsError(),
+                      error: (_, __) => _buildStatsBentoGrid(context, {
+                        'openComplaints': 0,
+                        'visitorsToday': 0,
+                        'pendingInvoices': 0,
+                        'collectionPct': 0,
+                        'totalCollection': '0',
+                        'expected': '0',
+                        'criticalComplaints': 0,
+                        'pendingComplaints': 0,
+                      }),
                     ),
 
                     const SizedBox(height: 40),
