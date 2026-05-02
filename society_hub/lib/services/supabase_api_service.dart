@@ -231,11 +231,12 @@ class SupabaseApiService extends ApiService {
     required String registrationNumber,
     required String subscriptionPlan,
   }) async {
+    final reg = registrationNumber.trim();
     await _db.from('societies').insert({
       'name': name,
       'address': address,
       'city': city,
-      'registration_number': registrationNumber,
+      'registration_number': reg.isEmpty ? null : reg,
       'subscription_plan': subscriptionPlan,
     });
   }

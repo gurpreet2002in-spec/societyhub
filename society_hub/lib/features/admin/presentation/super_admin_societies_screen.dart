@@ -52,8 +52,8 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
   }
 
   Widget _buildSocietyCard(BuildContext context, Map<String, dynamic> soc, ColorScheme colors) {
-    final bool isActive = soc['subscriptionStatus'] == 'active';
-    final planColor = soc['subscriptionPlan'] == 'premium' ? Colors.orange : Colors.blue;
+    final bool isActive = soc['subscription_status'] == 'active';
+    final planColor = soc['subscription_plan'] == 'premium' ? Colors.orange : Colors.blue;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -86,7 +86,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${soc['city']} \u2022 Reg: ${soc['registrationNumber'] ?? 'N/A'}',
+                          '${soc['city']} \u2022 Reg: ${soc['registration_number'] ?? 'N/A'}',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: colors.onSurface.withValues(alpha: 0.6),
                           ),
@@ -101,7 +101,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      (soc['subscriptionPlan'] ?? 'basic').toUpperCase(),
+                      (soc['subscription_plan'] ?? 'basic').toUpperCase(),
                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: planColor),
                     ),
                   ),
@@ -111,7 +111,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildStatItem(Icons.people_rounded, '${soc['totalUsers'] ?? 0} Users', colors.secondary),
+                  _buildStatItem(Icons.people_rounded, '${soc['total_users'] ?? 0} Users', colors.secondary),
                   _buildStatItem(
                     isActive ? Icons.check_circle_rounded : Icons.cancel_rounded,
                     isActive ? 'Active' : 'Suspended',
@@ -142,7 +142,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                             address: soc['address'], 
                             city: soc['city'],
                             subscriptionStatus: 'active', 
-                            subscriptionPlan: soc['subscriptionPlan'] ?? 'basic',
+                            subscriptionPlan: soc['subscription_plan'] ?? 'basic',
                           );
                           ref.invalidate(superAdminSocietiesProvider);
                           if (context.mounted) {
@@ -300,8 +300,8 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
     final nameCtrl = TextEditingController(text: soc['name']);
     final addressCtrl = TextEditingController(text: soc['address']);
     final cityCtrl = TextEditingController(text: soc['city']);
-    String status = soc['subscriptionStatus'] ?? 'active';
-    String plan = soc['subscriptionPlan'] ?? 'basic';
+    String status = soc['subscription_status'] ?? 'active';
+    String plan = soc['subscription_plan'] ?? 'basic';
     final colors = Theme.of(context).colorScheme;
 
     showModalBottomSheet(
