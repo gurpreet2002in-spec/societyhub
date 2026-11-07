@@ -23,16 +23,18 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "graphify": "^1.0.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
     "nodemailer": "^6.9.1",
+    "pg": "^8.11.0",
+    "pg-hstore": "^2.3.4",
     "razorpay": "^2.9.6",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.0",
     "recharts": "^2.15.3",
     "sequelize": "^6.37.8",
-    "pg": "^8.11.0",
-    "pg-hstore": "^2.3.4"
+    "sqlite3": "^6.0.1"
   },
   "devDependencies": {
     "concurrently": "^8.0.1",

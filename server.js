@@ -4,6 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Sequelize, DataTypes } = require('sequelize');
+const path = require('path');
 
 // Use PostgreSQL if DATABASE_URL is provided (Railway), otherwise SQLite
 const isPostgres = process.env.DATABASE_URL?.startsWith('postgres');
@@ -32,12 +33,6 @@ app.use(express.json());
 const PORT = process.env.PORT || process.env.RAILWAY_PUBLIC_PORT || 5000;
 const HOST = process.env.HOST || '0.0.0.0';
 
-// SQLite Connection
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: path.join(__dirname, 'database.sqlite'),
-  logging: false,
-});
 
 // Models configuration
 const User = sequelize.define('User', {

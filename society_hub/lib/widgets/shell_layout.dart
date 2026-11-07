@@ -36,9 +36,10 @@ class _StitchBottomNav extends StatelessWidget {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          // All five tabs share the width equally, so none can fall off
+          // the edge on narrow phones.
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _NavItem(
                 icon: Icons.home_outlined,
@@ -109,13 +110,15 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Expanded(
+      child: GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         decoration: isActive
             ? BoxDecoration(
                 color: const Color(0xFFE8E7FF), // indigo-50 equivalent
@@ -131,17 +134,22 @@ class _NavItem extends StatelessWidget {
               size: 24,
             ),
             const SizedBox(height: 4),
-            Text(
-              label.toUpperCase(),
-              style: GoogleFonts.inter(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.8,
-                color: isActive ? AppTheme.primary : const Color(0xFF9E9EB3),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label.toUpperCase(),
+                maxLines: 1,
+                style: GoogleFonts.inter(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.4,
+                  color: isActive ? AppTheme.primary : const Color(0xFF9E9EB3),
+                ),
               ),
             ),
           ],
         ),
+      ),
       ),
     );
   }

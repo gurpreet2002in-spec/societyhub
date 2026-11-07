@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../providers/community_provider.dart';
 import '../../../services/api_service.dart';
+import '../../admin/presentation/admin_setup_sheets.dart';
 
 class CommunityScreen extends ConsumerStatefulWidget {
   const CommunityScreen({super.key});
@@ -166,7 +167,7 @@ class _NoticesTab extends ConsumerWidget {
     return asyncNotices.when(
       data: (notices) {
         if (notices.isEmpty) {
-          return const Center(child: Text('No notices yet.', style: TextStyle(color: Colors.grey)));
+          return const Center(child: Text('No notices yet.', style: TextStyle(color: Color(0xFF616161))));
         }
         return ListView.builder(
           padding: const EdgeInsets.all(16),
@@ -224,16 +225,16 @@ class _NoticesTab extends ConsumerWidget {
                       if (isAdmin)
                         GestureDetector(
                           onTap: () => ref.read(noticesProvider.notifier).delete(n['id']),
-                          child: const Icon(Icons.delete_outline, size: 18, color: Colors.grey),
+                          child: const Icon(Icons.delete_outline, size: 18, color: Color(0xFF616161)),
                         ),
                     ]),
                     const SizedBox(height: 10),
                     Text(n['title'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 6),
-                    Text(n['body'] ?? '', style: const TextStyle(color: Colors.grey, height: 1.4)),
+                    Text(n['body'] ?? '', style: const TextStyle(color: Color(0xFF616161), height: 1.4)),
                     const SizedBox(height: 10),
                     Text('\u2014 $postedBy \u00B7 $createdAt',
-                        style: const TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)),
+                        style: const TextStyle(fontSize: 11, color: Color(0xFF616161), fontStyle: FontStyle.italic)),
                   ],
                 ),
               ),
@@ -258,22 +259,55 @@ class _PollsTab extends ConsumerWidget {
 
     return asyncPolls.when(
       data: (polls) {
+        Future<void> createPoll() async {
+          if (await showCreatePollSheet(context, ref)) {
+            await ref.read(pollsProvider.notifier).load();
+          }
+        }
+
         if (polls.isEmpty) {
-          return const Center(child: Text('No active polls.', style: TextStyle(color: Colors.grey)));
+          return Center(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              const Text('No active polls.', style: TextStyle(color: Color(0xFF616161))),
+              if (isAdmin) ...[
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  onPressed: createPoll,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Create poll'),
+                ),
+              ],
+            ]),
+          );
         }
         return ListView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: polls.length,
-          itemBuilder: (ctx, i) {
+          itemCount: polls.length + (isAdmin ? 1 : 0),
+          itemBuilder: (ctx, idx) {
+            if (isAdmin && idx == 0) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton.tonalIcon(
+                    onPressed: createPoll,
+                    icon: const Icon(Icons.add),
+                    label: const Text('Create poll'),
+                  ),
+                ),
+              );
+            }
+            final i = isAdmin ? idx - 1 : idx;
             final p = polls[i] as Map<String, dynamic>;
             final options = ((p['options'] as List<dynamic>?) ?? []).cast<String>();
             final voteCounts = ((p['voteCounts'] as List<dynamic>?) ?? []).cast<int>();
             final totalVotes = p['totalVotes'] as int? ?? 0;
             final userVote = p['userVote'] as int?;
-            final hasVoted = userVote != null;
-            final endDate = p['endDate'] != null
-                ? DateFormat('MMM d, yyyy').format(DateTime.parse(p['endDate']))
-                : '';
+            final endsAt = p['endDate'] != null ? DateTime.tryParse('${p['endDate']}')?.toLocal() : null;
+            final ended = endsAt != null && endsAt.isBefore(DateTime.now());
+            // After voting, or once the poll has ended, show results instead of buttons.
+            final hasVoted = userVote != null || ended;
+            final endDate = endsAt != null ? DateFormat('MMM d, yyyy').format(endsAt) : 'no end date';
 
             return Container(
               margin: const EdgeInsets.only(bottom: 20),
@@ -293,10 +327,44 @@ class _PollsTab extends ConsumerWidget {
                       child: Text(p['question'] ?? '',
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     ),
+                    if (isAdmin)
+                      IconButton(
+                        tooltip: 'Delete poll',
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(Icons.delete_outline, size: 20, color: Colors.red),
+                        onPressed: () async {
+                          final ok = await showDialog<bool>(
+                            context: context,
+                            builder: (d) => AlertDialog(
+                              title: const Text('Delete this poll?'),
+                              content: const Text('All its votes are deleted too.'),
+                              actions: [
+                                TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
+                                FilledButton(
+                                  style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                                  onPressed: () => Navigator.pop(d, true),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (ok != true) return;
+                          try {
+                            await ref.read(apiServiceProvider).deletePoll('${p['id']}');
+                            await ref.read(pollsProvider.notifier).load();
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(e.toString().replaceFirst('Exception: ', '')),
+                                  backgroundColor: Colors.red));
+                            }
+                          }
+                        },
+                      ),
                   ]),
                   const SizedBox(height: 4),
-                  Text('Ends $endDate \u00B7 $totalVotes votes',
-                      style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                  Text('${ended ? 'Ended' : 'Ends'} $endDate \u00B7 $totalVotes votes',
+                      style: const TextStyle(fontSize: 11, color: Color(0xFF616161))),
                   const SizedBox(height: 16),
                   ...List.generate(options.length, (idx) {
                     final count = voteCounts[idx];

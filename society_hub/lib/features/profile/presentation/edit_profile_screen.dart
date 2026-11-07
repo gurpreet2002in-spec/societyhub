@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../services/api_service.dart';
+import '../../../core/unit_labels.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -23,8 +24,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final user = ref.read(apiServiceProvider).user;
     _nameCtrl = TextEditingController(text: user?['name'] ?? '');
     _phoneCtrl = TextEditingController(text: user?['contactNumber'] ?? '');
-    _apartmentCtrl = TextEditingController(text: user?['apartmentNumber'] ?? '');
+    _apartmentCtrl = TextEditingController(text: user?['apartmentNumber'] ?? user?['apartment_number'] ?? '');
+    // Approved residents can't change their own flat (the database enforces it
+    // too); the society admin manages it.
+    _flatLocked = user?['role'] == 'resident' && user?['status'] == 'active';
   }
+
+  bool _flatLocked = false;
 
   @override
   void dispose() {
@@ -41,11 +47,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       await ref.read(apiServiceProvider).updateProfile(
         name: _nameCtrl.text.trim(),
         contactNumber: _phoneCtrl.text.trim(),
-        apartmentNumber: _apartmentCtrl.text.trim(),
+        apartmentNumber: _flatLocked ? null : _apartmentCtrl.text.trim(),
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('\u00E2\u0153\u2026 Profile updated successfully!'), backgroundColor: Colors.green),
+          const SnackBar(content: Text('\u2705 Profile updated successfully!'), backgroundColor: Colors.green),
         );
         context.pop();
       }
@@ -121,7 +127,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _apartmentCtrl,
-              decoration: _inputDecoration(context, 'Apartment Number', Icons.apartment_rounded),
+              readOnly: _flatLocked,
+              decoration: _inputDecoration(context, unitNumberLabel(ref.read(apiServiceProvider).user?['propertyType'] as String? ?? 'mixed', unitType: ref.read(apiServiceProvider).user?['unit_type'] as String?), Icons.apartment_rounded).copyWith(
+                helperText: _flatLocked ? 'Managed by your society admin. Ask them to change it.' : null,
+                suffixIcon: _flatLocked ? const Icon(Icons.lock_outline, size: 18) : null,
+              ),
             ),
             const SizedBox(height: 32),
             FilledButton.icon(
@@ -150,7 +160,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   }
 
   Widget _buildSection(String title) {
-    return Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.grey, letterSpacing: 2));
+    return Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF616161), letterSpacing: 2));
   }
 }
 

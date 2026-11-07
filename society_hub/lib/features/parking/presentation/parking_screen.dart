@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/parking_provider.dart';
 import '../../../services/api_service.dart';
+import '../../../core/unit_labels.dart';
+import '../../admin/presentation/admin_setup_sheets.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../widgets/unit_picker_field.dart';
 import '../../../widgets/premium_card.dart';
 import '../../../widgets/premium_glass_app_bar.dart';
 
@@ -20,6 +23,17 @@ class ParkingScreen extends ConsumerWidget {
       extendBodyBehindAppBar: true,
       backgroundColor: AppTheme.surface,
       appBar: const PremiumGlassAppBar(showBranding: true),
+      floatingActionButton: isAdmin
+          ? FloatingActionButton.extended(
+              onPressed: () async {
+                if (await showAddParkingSlotsSheet(context, ref)) {
+                  await ref.read(parkingProvider.notifier).load();
+                }
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Add slots'),
+            )
+          : null,
       body: asyncSlots.when(
         data: (slots) {
           final carSlots = slots.where((s) => s['type'] == 'car').toList();
@@ -255,7 +269,7 @@ class ParkingScreen extends ConsumerWidget {
                         color: iconColor,
                         size: 32,
                       ),
-                      if (isOccupied && s['vehicleNo'] != null) ...[
+                      if (isOccupied && (s['flat_id'] ?? s['vehicleNo']) != null) ...[
                         const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -264,7 +278,7 @@ class ParkingScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            s['vehicleNo'],
+                            '${s['flat_id'] ?? s['vehicleNo']}',
                             style: const TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.w800,
@@ -289,6 +303,7 @@ class ParkingScreen extends ConsumerWidget {
   void _showSlotActions(BuildContext context, WidgetRef ref, Map<String, dynamic> slot) {
     final isOccupied = slot['status'] == 'occupied';
     final vehicleCtrl = TextEditingController();
+    final flatCtrl = TextEditingController();
     final theme = Theme.of(context);
 
     showModalBottomSheet(
@@ -319,21 +334,25 @@ class ParkingScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              isOccupied ? 'Currently occupied by: ${slot['vehicleNo']}' : 'Slot is currently available for allocation',
+              isOccupied
+                  ? 'Allotted to ${unitNoun(ref.read(apiServiceProvider).user?['propertyType'] as String?).toLowerCase()} ${slot['flat_id'] ?? '-'}${(slot['vehicleNo'] ?? '').toString().isNotEmpty ? ' \u2022 ${slot['vehicleNo']}' : ''}'
+                  : 'Slot is currently available for allocation',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: isOccupied ? AppTheme.error : AppTheme.secondary,
               ),
             ),
             const SizedBox(height: 24),
             if (!isOccupied) ...[
-              _buildInputLabel('Vehicle Plate', theme),
+              UnitPickerField(onChanged: (v) => flatCtrl.text = v ?? ''),
+              const SizedBox(height: 16),
+              _buildInputLabel('Vehicle Plate (optional)', theme),
               const SizedBox(height: 8),
               TextField(
                 controller: vehicleCtrl,
                 textCapitalization: TextCapitalization.characters,
                 decoration: InputDecoration(
                   hintText: 'e.g. DL12AB3456',
-                  hintStyle: const TextStyle(color: AppTheme.outlineVariant),
+                  hintStyle: const TextStyle(color: AppTheme.onSurfaceVariant),
                   fillColor: AppTheme.surfaceContainerHighest,
                   filled: true,
                   border: OutlineInputBorder(
@@ -346,12 +365,16 @@ class ParkingScreen extends ConsumerWidget {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
-                  if (vehicleCtrl.text.isEmpty) return;
+                  if (flatCtrl.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Enter the flat this slot is for')));
+                    return;
+                  }
                   try {
                     await ref.read(parkingProvider.notifier).allocate(
-                      slot['id'], 
-                      '', 
-                      vehicleCtrl.text, 
+                      slot['id'],
+                      flatCtrl.text.trim(),
+                      vehicleCtrl.text.trim().toUpperCase(),
                       slot['type'] ?? 'car'
                     );
                     if (context.mounted) {
@@ -411,6 +434,43 @@ class ParkingScreen extends ConsumerWidget {
                   ),
                 ),
                 child: const Text('RELEASE SLOT', style: TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1.5)),
+              ),
+            ],
+            if (!isOccupied) ...[
+              const SizedBox(height: 8),
+              TextButton.icon(
+                style: TextButton.styleFrom(foregroundColor: AppTheme.error),
+                onPressed: () async {
+                  final ok = await showDialog<bool>(
+                    context: context,
+                    builder: (d) => AlertDialog(
+                      title: Text('Delete slot ${slot['slotNumber']}?'),
+                      content: const Text('Use this if the slot was added by mistake or no longer exists.'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
+                        FilledButton(
+                          style: FilledButton.styleFrom(backgroundColor: AppTheme.error),
+                          onPressed: () => Navigator.pop(d, true),
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (ok != true) return;
+                  try {
+                    await ref.read(apiServiceProvider).deleteParkingSlot('${slot['id']}');
+                    await ref.read(parkingProvider.notifier).load();
+                    if (context.mounted) Navigator.pop(context);
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(e.toString().replaceFirst('Exception: ', '')),
+                          backgroundColor: AppTheme.error));
+                    }
+                  }
+                },
+                icon: const Icon(Icons.delete_outline),
+                label: const Text('Delete slot'),
               ),
             ],
           ],

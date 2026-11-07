@@ -14,6 +14,9 @@ build/
 android/app/build/
 android/.gradle/
 ios/Pods/
+*.apk
+Claude outputs/
+graphify-out/
 
 # IDE
 .idea/
@@ -35,6 +38,8 @@ Thumbs.db
 # Logs
 *.log
 npm_debug.log*
+build_log.txt
+run_log.txt
 
 # Test
 coverage/

@@ -19,7 +19,10 @@ class PaymentsScreen extends ConsumerWidget {
       body: asyncInvoices.when(
         data: (invoices) {
           final pending = invoices
-              .where((i) => i['status'] == 'unpaid' || i['status'] == 'overdue')
+              .where((i) =>
+                  i['status'] == 'unpaid' ||
+                  i['status'] == 'overdue' ||
+                  i['status'] == 'under_review')
               .toList();
           final paid = invoices.where((i) => i['status'] == 'paid').toList();
           final totalDues = pending.fold(0.0, (sum, i) => sum + (i['totalAmount'] ?? 0));
@@ -324,6 +327,7 @@ class _InvoiceRow extends StatelessWidget {
     final title = invoice['title'] ?? 'Maintenance';
     final amount = invoice['totalAmount'] ?? 0;
     final invoiceId = invoice['id'];
+    final underReview = invoice['status'] == 'under_review';
     final dueDateStr = invoice['dueDate'];
     DateTime? dueDate;
     if (dueDateStr != null && dueDateStr.toString().isNotEmpty) {
@@ -384,26 +388,34 @@ class _InvoiceRow extends StatelessWidget {
                     color: AppTheme.onSurfaceVariant,
                   ),
                 ),
-                if (isPending) ...[
+                if (isPending && !underReview) ...[
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (dCtx) => AlertDialog(
+                          title: const Text('Mark as paid?'),
+                          content: Text(
+                              'Confirm that you have paid ₹$amount for "$title" '
+                              '(UPI, bank transfer or cash). Your society admin will verify it.'),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(dCtx, false),
+                                child: const Text('Cancel')),
+                            FilledButton(
+                                onPressed: () => Navigator.pop(dCtx, true),
+                                child: const Text('Yes, I have paid')),
+                          ],
+                        ),
+                      );
+                      if (confirmed != true) return;
                       try {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Connecting to Payment Gateway...',
-                                style: GoogleFonts.inter()),
-                            backgroundColor: AppTheme.primary,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                        );
                         await ref.read(invoicesProvider.notifier).payInvoice(invoiceId);
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Payment Successful!',
+                              content: Text('Submitted. Your admin will confirm the payment.',
                                   style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
                               backgroundColor: AppTheme.secondary,
                               behavior: SnackBarBehavior.floating,
@@ -416,7 +428,7 @@ class _InvoiceRow extends StatelessWidget {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Payment failed: $e'),
+                              content: Text('Could not submit: ${e.toString().replaceFirst('Exception: ', '')}'),
                               backgroundColor: AppTheme.error,
                             ),
                           );
@@ -431,7 +443,7 @@ class _InvoiceRow extends StatelessWidget {
                         border: Border.all(color: AppTheme.primary.withValues(alpha: 0.3)),
                       ),
                       child: Text(
-                        'PAY NOW',
+                        "I'VE PAID",
                         style: GoogleFonts.inter(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
@@ -467,7 +479,7 @@ class _InvoiceRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Text(
-                  isPending ? 'PENDING' : 'PAID',
+                  underReview ? 'UNDER REVIEW' : (isPending ? 'PENDING' : 'PAID'),
                   style: GoogleFonts.inter(
                     fontSize: 9,
                     fontWeight: FontWeight.w700,

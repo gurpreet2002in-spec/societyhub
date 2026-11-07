@@ -1,0 +1,87 @@
+# Codemagic CI — builds SocietyHub for iPhone (IPA → TestFlight) and Android.
+# Put this file in the ROOT of the git repo (F:\society app\codemagic.yaml).
+#
+# One-time setup in codemagic.io (free tier is enough to start):
+#  1. Sign in with GitHub and add this repository.
+#  2. Teams → Integrations → "Developer Portal": connect your App Store Connect
+#     API key (needs a paid Apple Developer account, $99/year).
+#  3. App → Environment variables → create group "societyhub" with:
+#       SUPABASE_URL                     your Supabase project URL
+#       SUPABASE_ANON_KEY                the anon / publishable key
+#       FIREBASE_OPTIONS_DART_B64        base64 of society_hub/lib/firebase_options.dart
+#       GOOGLE_SERVICE_INFO_PLIST_B64    base64 of society_hub/ios/Runner/GoogleService-Info.plist
+#       GOOGLE_SERVICES_JSON_B64         base64 of society_hub/android/app/google-services.json
+#     (Windows PowerShell:  [Convert]::ToBase64String([IO.File]::ReadAllBytes("path"))  )
+#     Mark them "Secure". These files are git-ignored on purpose.
+#  4. In Apple Developer → Identifiers, register the bundle id below
+#     (change it first — "com.example..." is rejected by Apple), and create
+#     the app in App Store Connect with the same id.
+#  5. Start the "ios-release" workflow. The IPA lands in TestFlight; testers
+#     install it with Apple's TestFlight app.
+
+workflows:
+  ios-release:
+    name: iOS release (TestFlight)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    working_directory: society_hub
+    integrations:
+      app_store_connect: codemagic   # name of the API key integration from step 2
+    environment:
+      groups:
+        - societyhub
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.example.societyHub   # ← change to your own id
+    scripts:
+      - name: Write secret config files
+        script: |
+          printf "SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n" "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > .env
+          echo "$FIREBASE_OPTIONS_DART_B64" | base64 --decode > lib/firebase_options.dart
+          echo "$GOOGLE_SERVICE_INFO_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
+      - name: Get packages
+        script: flutter pub get
+      - name: Install pods
+        script: cd ios && pod install --repo-update
+      - name: Set up code signing
+        script: xcode-project use-profiles
+      - name: Build IPA
+        script: |
+          flutter build ipa --release \
+            --obfuscate --split-debug-info=build/debug-info \
+            --build-number=$(($(date +%s)/60)) \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  android-release:
+    name: Android release (APK + AAB)
+    instance_type: linux_x2
+    max_build_duration: 60
+    working_directory: society_hub
+    environment:
+      groups:
+        - societyhub
+      flutter: stable
+    scripts:
+      - name: Write secret config files
+        script: |
+          printf "SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n" "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > .env
+          echo "$FIREBASE_OPTIONS_DART_B64" | base64 --decode > lib/firebase_options.dart
+          echo "$GOOGLE_SERVICES_JSON_B64" | base64 --decode > android/app/google-services.json
+      - name: Get packages
+        script: flutter pub get
+      - name: Build
+        script: |
+          flutter build apk --release --obfuscate --split-debug-info=build/debug-info
+          flutter build appbundle --release --obfuscate --split-debug-info=build/debug-info
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/bundle/release/app-release.aab

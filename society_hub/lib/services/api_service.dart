@@ -72,11 +72,11 @@ class ApiService {
     throw Exception(jsonDecode(response.body)['error'] ?? 'Login failed');
   }
 
-  Future<bool> register(String name, String email, String password) async {
+  Future<bool> register(String name, String email, String password, {String? societyId, String? joinCode, String? flat, String? occupancyType, String? unitType}) async {
     final response = await http.post(
       Uri.parse('$baseUrl/register'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'name': name, 'email': email, 'password': password, 'role': 'resident'}),
+      body: jsonEncode({'name': name, 'email': email, 'password': password, 'role': 'resident', 'society_id': societyId}),
     );
     if (response.statusCode == 201) {
       // after register, try to login automatically
@@ -135,6 +135,8 @@ class ApiService {
     throw Exception(jsonDecode(r.body)['error'] ?? 'Failed to load users');
   }
 
+  Future<List<Map<String, dynamic>>> getAllResidents() async => [];
+
   Future<void> updateUserRole(String userId, String role) async {
     if (_token == null) throw Exception("Unauthorized");
     final r = await http.put(Uri.parse('$baseUrl/admin/users/$userId/role'),
@@ -157,6 +159,7 @@ class ApiService {
     required String role,
     String? contactNumber,
     String? apartmentNumber,
+    String? occupancyType,
   }) async {
     if (_token == null) throw Exception("Unauthorized");
     final r = await http.post(Uri.parse('$baseUrl/admin/users'),
@@ -200,9 +203,35 @@ class ApiService {
     throw Exception(jsonDecode(r.body)['error'] ?? 'Failed to load platform societies');
   }
 
+  Future<Map<String, dynamic>?> getSocietyBySlug(String slug) async => null;
+
+  // Society join codes & resident approval (implemented in SupabaseApiService)
+  Future<Map<String, dynamic>?> getSocietyByCode(String code) async => null;
+  Future<String> joinSocietyWithCode(String code, {String? flat, String? occupancyType, String? unitType}) async => throw UnimplementedError();
+  Future<void> setUserFlat(String userId, String? flat, String? occupancyType, {String? unitType}) async => throw UnimplementedError();
+  Future<void> setSocietyPropertyType(String propertyType) async => throw UnimplementedError();
+  Future<List<dynamic>> getUnits() async => throw UnimplementedError();
+  Future<Map<String, dynamic>> requestVisitorApproval({required String name, required String mobile,
+      required String purpose, required String flatNumber, String? vehicleNumber}) async => throw UnimplementedError();
+  Future<void> reaskVisitorApproval(String visitorId) async => throw UnimplementedError();
+  Future<Map<String, dynamic>> respondToVisitor(String visitorId, bool approve, {String? note}) async =>
+      throw UnimplementedError();
+  Future<Map<String, dynamic>?> getVisitor(String visitorId) async => throw UnimplementedError();
+  Future<void> turnAwayVisitor(String visitorId) async => throw UnimplementedError();
+  Future<Map<String, dynamic>> verifyVisitorPass(String code) async => throw UnimplementedError();
+  Future<int> raiseSos({String? message}) async => throw UnimplementedError();
+  Future<void> saveUnit({String? id, required String number, String? unitType, String? block, String? floor,
+      String? ownerName, String? ownerPhone, String? ownerEmail, String? notes}) async => throw UnimplementedError();
+  Future<void> deleteUnit(String id) async => throw UnimplementedError();
+  Future<Map<String, dynamic>> importUnits(List<Map<String, dynamic>> rows) async => throw UnimplementedError();
+  Future<String?> mySocietyName() async => null;
+  Future<void> refreshProfile() async {}
+  Future<void> setUserStatus(String userId, String status) async => throw UnimplementedError();
+
   Future<void> superAdminCreateSociety({
     required String name, required String address, required String city,
-    required String registrationNumber, required String subscriptionPlan
+    required String registrationNumber, required String subscriptionPlan,
+    String propertyType = 'apartments'
   }) async {
     if (_token == null) throw Exception("Unauthorized");
     final r = await http.post(Uri.parse('$baseUrl/super-admin/societies'),
@@ -213,7 +242,8 @@ class ApiService {
 
   Future<void> superAdminUpdateSociety(String societyId, {
     required String name, required String address, required String city,
-    required String subscriptionStatus, required String subscriptionPlan
+    required String subscriptionStatus, required String subscriptionPlan,
+    String? propertyType
   }) async {
     if (_token == null) throw Exception("Unauthorized");
     final r = await http.put(Uri.parse('$baseUrl/super-admin/societies/$societyId'),
@@ -298,6 +328,14 @@ class ApiService {
     throw Exception('Failed to load invoices');
   }
 
+  // Admin: all invoices of the admin's society (implemented in SupabaseApiService)
+  Future<List<dynamic>> getSocietyInvoices() async => [];
+
+  // Admin: confirm a payment a resident submitted (implemented in SupabaseApiService)
+  Future<void> approveInvoicePayment(String invoiceId) async {
+    throw UnimplementedError();
+  }
+
   // Razorpay Integration (Mock/Simulated for MVP Frontend)
   Future<bool> initiateAndVerifyPayment(String invoiceId) async {
     if (_token == null) throw Exception("Unauthorized");
@@ -374,7 +412,8 @@ class ApiService {
     throw Exception('Failed to load visitors');
   }
 
-  Future<void> preapproveVisitor(String name, String mobile, String purpose, String expectedEntry) async {
+  Future<Map<String, dynamic>?> preapproveVisitor(String name, String mobile, String purpose, String expectedEntry,
+      {DateTime? validUntil}) async {
     if (_token == null) throw Exception("Unauthorized");
     final response = await http.post(
       Uri.parse('$baseUrl/visitors/preapprove'),
@@ -392,6 +431,7 @@ class ApiService {
     if (response.statusCode != 201 && response.statusCode != 200) {
       throw Exception('Failed to preapprove visitor');
     }
+    return null;
   }
 
   Future<void> updateVisitorStatus(String id, String status) async {
@@ -559,6 +599,22 @@ class ApiService {
         headers: {'Authorization': 'Bearer $_token'});
   }
 
+  // Admin setup (implemented in SupabaseApiService)
+  Future<void> createPoll(String question, List<String> options, {DateTime? endsAt}) async =>
+      throw UnimplementedError();
+  Future<void> deletePoll(String pollId) async => throw UnimplementedError();
+  Future<void> saveAmenity(Map<String, dynamic> data, {String? id}) async => throw UnimplementedError();
+  Future<void> deleteAmenity(String id) async => throw UnimplementedError();
+  Future<int> addParkingSlots(List<String> slotNumbers, String slotType) async => throw UnimplementedError();
+  Future<void> deleteParkingSlot(String id) async => throw UnimplementedError();
+  Future<void> setTotalFlats(int totalFlats) async => throw UnimplementedError();
+
+  // Complaint update thread (implemented in SupabaseApiService)
+  Future<List<dynamic>> getComplaintComments(String complaintId) async => [];
+  Future<void> addComplaintComment(String complaintId, String body) async => throw UnimplementedError();
+  Future<void> updateComplaintStatus(String complaintId, String status, {String? note}) async =>
+      throw UnimplementedError();
+
   Future<void> rateTicket(String id, int rating, String comment) async {
     if (_token == null) throw Exception("Unauthorized");
     await http.put(Uri.parse('$baseUrl/maintenance/$id/rate'),
@@ -697,6 +753,50 @@ class ApiService {
     if (r.statusCode == 200) return jsonDecode(r.body);
     throw Exception('Failed to load global settings');
   }
+
+  // ---- GUARD: VISITOR & VEHICLE MANAGEMENT ----
+  Future<List<dynamic>> getSocietyVisitors() async => [];
+  Future<void> checkInVisitor(String visitorId) async {}
+  Future<void> checkOutVisitor(String visitorId) async {}
+  Future<void> addVisitorEntry({
+    required String name,
+    required String mobile,
+    required String purpose,
+    required String flatNumber,
+    String? vehicleNumber,
+  }) async {}
+  Future<List<dynamic>> getDailyHelpStaff() async => [];
+
+  // ---- GUARD: VEHICLE LOGS ----
+  Future<List<dynamic>> getVehicleLogs() async => [];
+  Future<void> addVehicleLog({
+    required String vehicleNumber,
+    required String vehicleType,
+    required String flatNumber,
+    String? driverName,
+    String? purpose,
+  }) async {}
+  Future<void> checkOutVehicle(String logId) async {}
+
+  // ---- RESIDENT: VEHICLE MANAGEMENT ----
+  Future<List<dynamic>> getMyVehicles() async => [];
+  Future<void> addMyVehicle({
+    required String vehicleNumber,
+    required String vehicleType,
+    String? brandModel,
+    String? color,
+  }) async {}
+  Future<void> removeMyVehicle(String vehicleId) async {}
+  
+  Future<void> updateFcmToken(String? token) async {
+    if (_token == null) return;
+    await http.post(Uri.parse('$baseUrl/user/fcm-token'),
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $_token'},
+        body: jsonEncode({'fcmToken': token}));
+  }
+
+  // ---- GUARD: VEHICLE SEARCH ----
+  Future<Map<String, dynamic>?> findResidentByVehicle(String vehicleNumber) async => null;
 
   Future<List<dynamic>> getSuperAdminInvoices() async {
     if (_token == null) throw Exception("Unauthorized");

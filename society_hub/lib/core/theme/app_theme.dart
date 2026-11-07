@@ -80,24 +80,79 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusLg)),
       ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: surfaceContainerHighest,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radiusMd),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radiusMd),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radiusMd),
-          borderSide: BorderSide.none,
-        ),
-        labelStyle: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w500, color: onSurfaceVariant),
+      inputDecorationTheme: formFieldTheme(
+        fill: Colors.white,
+        outline: outlineVariant,
+        focus: primary,
+        label: onSurfaceVariant,
       ),
+      // ── Consistent controls in every form / dialog ──
+      dialogTheme: DialogThemeData(
+        backgroundColor: surfaceContainerLowest,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        titleTextStyle: GoogleFonts.manrope(fontSize: 20, fontWeight: FontWeight.w700, color: onSurface),
+        actionsPadding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: surfaceContainerLowest,
+        surfaceTintColor: Colors.transparent,
+        showDragHandle: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(64, 48),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(64, 48),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          side: const BorderSide(color: outlineVariant),
+          textStyle: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        side: const BorderSide(color: outlineVariant),
+        labelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500, color: onSurface),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      ),
+    );
+  }
+
+  /// One look for every text field in the app: white box, soft outline,
+  /// coloured outline when focused, red when there is an error.
+  static InputDecorationTheme formFieldTheme({
+    required Color fill,
+    required Color outline,
+    required Color focus,
+    required Color label,
+  }) {
+    OutlineInputBorder b(Color c, [double w = 1]) => OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: c, width: w),
+        );
+    return InputDecorationTheme(
+      filled: true,
+      fillColor: fill,
+      isDense: false,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      border: b(outline),
+      enabledBorder: b(outline),
+      focusedBorder: b(focus, 1.6),
+      errorBorder: b(error),
+      focusedErrorBorder: b(error, 1.6),
+      disabledBorder: b(outline.withValues(alpha: 0.5)),
+      labelStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w500, color: label),
+      floatingLabelStyle: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: focus),
+      hintStyle: GoogleFonts.inter(fontSize: 14, color: label.withValues(alpha: 0.8)),
+      helperStyle: GoogleFonts.inter(fontSize: 12, color: label),
+      prefixIconColor: label,
+      suffixIconColor: label,
     );
   }
 
@@ -131,6 +186,12 @@ class AppTheme {
         elevation: 0,
         centerTitle: false,
         iconTheme: IconThemeData(color: Colors.white),
+      ),
+      inputDecorationTheme: formFieldTheme(
+        fill: const Color(0xFF232627),
+        outline: const Color(0xFF55545F),
+        focus: const Color(0xFFC3C0FF),
+        label: const Color(0xFFC7C4D8),
       ),
     );
   }

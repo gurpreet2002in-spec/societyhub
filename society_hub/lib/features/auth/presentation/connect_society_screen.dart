@@ -161,7 +161,7 @@ class _ConnectSocietyScreenState extends ConsumerState<ConnectSocietyScreen> {
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontSize: 16,
-              color: Colors.grey[600],
+              color: Color(0xFF616161),
             ),
           ),
           const SizedBox(height: 48),
@@ -210,7 +210,7 @@ class _ConnectSocietyScreenState extends ConsumerState<ConnectSocietyScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   'OR',
-                  style: GoogleFonts.poppins(color: Colors.grey[500]),
+                  style: GoogleFonts.poppins(color: Color(0xFF616161)),
                 ),
               ),
               Expanded(child: Divider(color: Colors.grey[300])),

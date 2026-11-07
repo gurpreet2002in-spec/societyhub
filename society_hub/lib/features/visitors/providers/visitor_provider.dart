@@ -24,13 +24,13 @@ class VisitorsNotifier extends StateNotifier<AsyncValue<List<Visitor>>> {
     }
   }
 
-  Future<void> preapproveVisitor(String name, String mobile, String purpose, DateTime expectedEntry) async {
-    try {
-      await _apiService.preapproveVisitor(name, mobile, purpose, expectedEntry.toIso8601String());
-      await loadVisitors(); // Reload list
-    } catch (e) {
-      rethrow;
-    }
+  /// Creates the gate pass and returns it (with its pass code).
+  Future<Visitor?> preapproveVisitor(String name, String mobile, String purpose, DateTime expectedEntry,
+      {DateTime? validUntil}) async {
+    final row = await _apiService.preapproveVisitor(name, mobile, purpose, expectedEntry.toIso8601String(),
+        validUntil: validUntil);
+    await loadVisitors(); // Reload list
+    return row == null ? null : Visitor.fromJson(row);
   }
 
   Future<void> updateVisitorStatus(String id, String status) async {

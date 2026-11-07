@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../services/api_service.dart';
+import '../../../core/unit_labels.dart';
 import '../../payments/providers/payments_provider.dart';
 
 class AdminBillingScreen extends ConsumerStatefulWidget {
@@ -39,7 +40,7 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final asyncInvoices = ref.watch(invoicesProvider);
+    final asyncInvoices = ref.watch(adminInvoicesProvider);
 
     return Scaffold(
       backgroundColor: colors.surface,
@@ -95,7 +96,7 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
                   Text('Bulk Invoice Generator', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 13)),
                 ]),
                 const SizedBox(height: 16),
-                Text('\u00E2\u201A\u00B9 ${totalAmount.toStringAsFixed(0)} per flat',
+                Text('\u20B9 ${totalAmount.toStringAsFixed(0)} per flat',
                     style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 const Text('Base + GST combined total. Will be sent to all residents.',
@@ -125,7 +126,7 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
                   controller: _amountController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Base Amount (\u00E2\u201A\u00B9)',
+                    labelText: 'Base Amount (\u20B9)',
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
                     filled: true,
                     prefixIcon: const Icon(Icons.currency_rupee),
@@ -139,7 +140,7 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
                   controller: _taxController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'GST Amount (\u00E2\u201A\u00B9)',
+                    labelText: 'GST Amount (\u20B9)',
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
                     filled: true,
                     prefixIcon: const Icon(Icons.percent),
@@ -174,13 +175,13 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Due Date', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      const Text('Due Date', style: TextStyle(fontSize: 12, color: Color(0xFF616161))),
                       Text(DateFormat('MMMM dd, yyyy').format(_dueDate),
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     ],
                   ),
                   const Spacer(),
-                  const Icon(Icons.edit, size: 18, color: Colors.grey),
+                  const Icon(Icons.edit, size: 18, color: Color(0xFF616161)),
                 ],
               ),
             ),
@@ -231,11 +232,14 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
     return asyncInvoices.when(
       data: (invoices) {
         if (invoices.isEmpty) {
-          return const Center(child: Text('No invoices generated yet.', style: TextStyle(color: Colors.grey)));
+          return const Center(child: Text('No invoices generated yet.', style: TextStyle(color: Color(0xFF616161))));
         }
 
         final paid = invoices.where((i) => i['status'] == 'paid').length;
-        final unpaid = invoices.where((i) => i['status'] == 'unpaid').length;
+        final review = invoices.where((i) => i['status'] == 'under_review').length;
+        final unpaid = invoices
+            .where((i) => i['status'] == 'unpaid' || i['status'] == 'overdue')
+            .length;
         final totalCollected = invoices
             .where((i) => i['status'] == 'paid')
             .fold(0.0, (s, i) => s + (i['totalAmount'] ?? 0));
@@ -249,22 +253,30 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
                 children: [
                   _statChip('Paid', '$paid', Colors.green),
                   const SizedBox(width: 8),
+                  _statChip('To verify', '$review', Colors.blue),
+                  const SizedBox(width: 8),
                   _statChip('Unpaid', '$unpaid', Colors.orange),
                   const SizedBox(width: 8),
-                  _statChip('Collected', '\u00E2\u201A\u00B9${totalCollected.toStringAsFixed(0)}', Colors.blue),
+                  _statChip('Collected', '\u20B9${totalCollected.toStringAsFixed(0)}', Colors.teal),
                 ],
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: invoices.length,
-                itemBuilder: (context, index) {
-                  final inv = invoices[index];
-                  final isPaid = inv['status'] == 'paid';
-                  final residentName = inv['User']?['name'] ?? 'Resident';
-                  return _buildAdminInvoiceRow(context, inv, isPaid, residentName);
-                },
+              child: RefreshIndicator(
+                onRefresh: () async => ref.invalidate(adminInvoicesProvider),
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: invoices.length,
+                  itemBuilder: (context, index) {
+                    final inv = invoices[index];
+                    final isPaid = inv['status'] == 'paid';
+                    final user = inv['User'];
+                    final flat = user?['apartment_number'];
+                    final residentName = '${user?['name'] ?? 'Resident'}'
+                        '${flat != null && '$flat'.isNotEmpty ? ' \u00B7 ${unitNoun(ref.read(apiServiceProvider).user?['propertyType'] as String?, unitType: user?['unit_type'] as String?)} $flat' : ''}';
+                    return _buildAdminInvoiceRow(context, inv, isPaid, residentName);
+                  },
+                ),
               ),
             ),
           ],
@@ -288,7 +300,7 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
           children: [
             Text(value, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color)),
             const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+            Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF616161))),
           ],
         ),
       ),
@@ -321,28 +333,72 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(residentName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text(inv['title'] ?? '', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(inv['title'] ?? '', style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('\u00E2\u201A\u00B9 ${inv['totalAmount']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text('\u20B9 ${inv['totalAmount']}', style: const TextStyle(fontWeight: FontWeight.bold)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: isPaid ? Colors.green.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(isPaid ? 'PAID' : 'UNPAID',
+                child: Text(
+                    isPaid
+                        ? 'PAID'
+                        : (inv['status'] == 'under_review' ? 'TO VERIFY' : 'UNPAID'),
                     style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isPaid ? Colors.green : Colors.orange)),
               ),
+              if (!isPaid)
+                TextButton(
+                  style: TextButton.styleFrom(
+                      visualDensity: VisualDensity.compact, padding: EdgeInsets.zero),
+                  onPressed: () => _approve(context, inv),
+                  child: Text(inv['status'] == 'under_review' ? 'Approve' : 'Mark paid',
+                      style: const TextStyle(fontSize: 12)),
+                ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _approve(BuildContext context, Map<String, dynamic> inv) async {
+    final note = inv['payment_note'];
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        title: const Text('Confirm payment received?'),
+        content: Text('${inv['title'] ?? 'Invoice'} — ₹${inv['totalAmount']}'
+            '${note != null && '$note'.isNotEmpty ? '\nResident note: $note' : ''}\n\n'
+            'Only confirm after you have checked the money arrived.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dCtx, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(dCtx, true), child: const Text('Confirm')),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    try {
+      await ref.read(apiServiceProvider).approveInvoicePayment(inv['id']);
+      ref.invalidate(adminInvoicesProvider);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Payment confirmed. The resident has been notified.'),
+            backgroundColor: Colors.green));
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(e.toString().replaceFirst('Exception: ', '')),
+            backgroundColor: Colors.red));
+      }
+    }
   }
 
   Future<void> _doGenerate() async {
@@ -360,10 +416,10 @@ class _AdminBillingScreenState extends ConsumerState<AdminBillingScreen>
     try {
       await ref.read(apiServiceProvider).generateBulkInvoices(
           title, amount, tax, _dueDate.toIso8601String());
-      ref.invalidate(invoicesProvider);
+      ref.invalidate(adminInvoicesProvider);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('\u00E2\u0153\u2026 Invoices generated for all residents!'),
+            content: Text('\u2705 Invoices generated for all residents!'),
             backgroundColor: Colors.green));
         _tabController.animateTo(1);
       }

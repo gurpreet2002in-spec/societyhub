@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/api_service.dart';
+import '../../../core/unit_labels.dart';
+import 'package:go_router/go_router.dart';
 
 final societyProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
   return ref.read(apiServiceProvider).getSocietySettings();
@@ -18,8 +20,11 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
   final _addressCtrl = TextEditingController();
   final _cityCtrl = TextEditingController();
   final _regCtrl = TextEditingController();
+  final _flatsCtrl = TextEditingController();
   bool _isLoading = false;
   bool _initialized = false;
+  String _propertyType = 'apartments';
+  String _savedPropertyType = 'apartments';
 
   @override
   void dispose() {
@@ -27,6 +32,7 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
     _addressCtrl.dispose();
     _cityCtrl.dispose();
     _regCtrl.dispose();
+    _flatsCtrl.dispose();
     super.dispose();
   }
 
@@ -35,7 +41,11 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
       _nameCtrl.text = data['name'] ?? '';
       _addressCtrl.text = data['address'] ?? '';
       _cityCtrl.text = data['city'] ?? '';
-      _regCtrl.text = data['registrationNumber'] ?? '';
+      _regCtrl.text = data['registrationNumber'] ?? data['registration_number'] ?? '';
+      _flatsCtrl.text = data['total_flats'] == null ? '' : '${data['total_flats']}';
+      final t = data['property_type'] ?? data['propertyType'];
+      _propertyType = societyTypeLabels.containsKey(t) ? t : 'apartments';
+      _savedPropertyType = _propertyType;
       _initialized = true;
     }
   }
@@ -49,10 +59,18 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
         city: _cityCtrl.text.trim(),
         registrationNumber: _regCtrl.text.trim(),
       );
+      final flats = int.tryParse(_flatsCtrl.text.trim());
+      if (flats != null && flats >= 0) {
+        await ref.read(apiServiceProvider).setTotalFlats(flats);
+      }
+      if (_propertyType != _savedPropertyType) {
+        await ref.read(apiServiceProvider).setSocietyPropertyType(_propertyType);
+        _savedPropertyType = _propertyType;
+      }
       ref.invalidate(societyProvider);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('\u00E2\u0153\u2026 Society settings updated!'), backgroundColor: Colors.green),
+          const SnackBar(content: Text('\u2705 Society settings updated!'), backgroundColor: Colors.green),
         );
       }
     } catch (e) {
@@ -107,8 +125,22 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
                         children: [
                           Text(data['name'] ?? 'Society', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                           Text(data['city'] ?? '', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14)),
-                          if (data['registrationNumber'] != null)
-                            Text('Reg: ${data['registrationNumber']}', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 12)),
+                          if ((data['registrationNumber'] ?? data['registration_number']) != null)
+                            Text('Reg: ${data['registrationNumber'] ?? data['registration_number']}', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12)),
+                          if (data['join_code'] != null) ...[
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: SelectableText(
+                                'Join code: ${data['join_code']}',
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, letterSpacing: 1),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -121,11 +153,11 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
               _buildSectionLabel('SOCIETY STATS'),
               const SizedBox(height: 12),
               Row(children: [
-                Expanded(child: _buildStatCard(context, '${data['totalFlats'] ?? 0}', 'Total Flats', Icons.apartment_rounded, Colors.blue)),
+                Expanded(child: _buildStatCard(context, '${data['totalFlats'] ?? 0}', 'Total ${unitsTitle(_propertyType).toLowerCase()}', unitIcon(_propertyType), Colors.blue)),
                 const SizedBox(width: 12),
                 Expanded(child: _buildStatCard(context, '${data['totalResidents'] ?? 0}', 'Residents', Icons.people_rounded, Colors.green)),
                 const SizedBox(width: 12),
-                Expanded(child: _buildStatCard(context, '${data['totalBlocks'] ?? 0}', 'Blocks', Icons.domain_rounded, Colors.orange)),
+                Expanded(child: _buildStatCard(context, '${data['unitsInList'] ?? 0}', 'Added to list', Icons.playlist_add_check_rounded, Colors.orange)),
               ]),
               const SizedBox(height: 32),
 
@@ -151,11 +183,39 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
                 controller: _regCtrl,
                 decoration: _inputDecoration(context, 'Registration Number', Icons.badge_rounded),
               ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                initialValue: _propertyType,
+                isExpanded: true,
+                decoration: _inputDecoration(context, 'Type of homes', Icons.holiday_village_rounded),
+                items: societyTypeLabels.entries
+                    .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
+                    .toList(),
+                onChanged: (v) => setState(() => _propertyType = v!),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _flatsCtrl,
+                keyboardType: TextInputType.number,
+                decoration: _inputDecoration(context, 'Total ${unitsTitle(_propertyType).toLowerCase()} in the society', unitIcon(_propertyType)),
+              ),
               const SizedBox(height: 24),
 
-              // Blocks & Flats
-              _buildSectionLabel('BLOCKS & FLATS'),
+              // The flats / houses list itself lives on its own screen.
+              _buildSectionLabel('${unitsTitle(_propertyType).toUpperCase()} LIST'),
               const SizedBox(height: 12),
+              Card(
+                elevation: 0,
+                color: colors.primaryContainer.withValues(alpha: 0.3),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: ListTile(
+                  leading: Icon(unitIcon(_propertyType), color: colors.primary),
+                  title: Text('${data['unitsInList'] ?? 0} of ${data['totalFlats'] ?? 0} added'),
+                  subtitle: const Text('Add, edit, bulk add, import / export, owners and parking'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => context.push('/admin/flats'),
+                ),
+              ),
               if (data['blocks'] != null)
                 ...(data['blocks'] as List).map((block) => _buildBlockCard(context, block, colors)),
               const SizedBox(height: 40),
@@ -178,13 +238,13 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
           child: Icon(Icons.domain_rounded, color: colors.primary),
         ),
         title: Text(block['name'] ?? 'Block', style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('${(block['Flats'] as List?)?.length ?? 0} flats', style: const TextStyle(color: Colors.grey)),
+        subtitle: Text('${(block['Flats'] as List?)?.length ?? 0} flats', style: const TextStyle(color: Color(0xFF616161))),
         children: (block['Flats'] as List? ?? []).map<Widget>((flat) {
           return ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 2),
             leading: const Icon(Icons.meeting_room_rounded, size: 20),
             title: Text('Flat ${flat['number']}', style: const TextStyle(fontSize: 14)),
-            subtitle: Text('Floor ${flat['floor'] ?? 'N/A'}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            subtitle: Text('Floor ${flat['floor'] ?? 'N/A'}', style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
           );
         }).toList(),
       ),
@@ -204,7 +264,7 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
           Icon(icon, color: color, size: 28),
           const SizedBox(height: 8),
           Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
-          Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey), textAlign: TextAlign.center),
+          Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF616161)), textAlign: TextAlign.center),
         ],
       ),
     );
@@ -221,7 +281,7 @@ class _SocietySettingsScreenState extends ConsumerState<SocietySettingsScreen> {
   }
 
   Widget _buildSectionLabel(String label) {
-    return Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Colors.grey, letterSpacing: 2));
+    return Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: Color(0xFF616161), letterSpacing: 2));
   }
 }
 

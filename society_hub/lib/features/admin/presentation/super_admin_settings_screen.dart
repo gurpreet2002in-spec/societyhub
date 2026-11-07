@@ -87,7 +87,7 @@ class _SuperAdminSettingsScreenState extends ConsumerState<SuperAdminSettingsScr
 
                 const SizedBox(height: 32),
                 _buildHeader('RAZORPAY GATEWAY CREDENTIALS', colors),
-                Text('These credentials are used for society-to-platform billing.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.onSurface.withValues(alpha: 0.6))),
+                Text('These credentials are used for society-to-platform billing.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.onSurface.withValues(alpha: 0.75))),
                 const SizedBox(height: 16),
                 _buildTextField('Razorpay Key ID', _razorpayIdCtrl, Icons.vpn_key_rounded),
                 _buildTextField('Razorpay Key Secret', _razorpaySecretCtrl, Icons.security_rounded, obscure: true),
@@ -101,7 +101,7 @@ class _SuperAdminSettingsScreenState extends ConsumerState<SuperAdminSettingsScr
 
                 const SizedBox(height: 32),
                 _buildHeader('SUBSCRIPTION PLANS (READ-ONLY)', colors),
-                Text('To edit plans, tap individual tiers below:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.onSurface.withValues(alpha: 0.6))),
+                Text('To edit plans, tap individual tiers below:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: colors.onSurface.withValues(alpha: 0.75))),
                 const SizedBox(height: 16),
                 ...((settings['plans'] as List?) ?? []).map((plan) => _buildPlanCard(plan, colors)),
                 
@@ -127,7 +127,7 @@ class _SuperAdminSettingsScreenState extends ConsumerState<SuperAdminSettingsScr
         ),
         child: SwitchListTile(
           title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-          subtitle: Text(subtitle, style: TextStyle(color: colors.onSurface.withValues(alpha: 0.6), fontSize: 13)),
+          subtitle: Text(subtitle, style: TextStyle(color: colors.onSurface.withValues(alpha: 0.75), fontSize: 13)),
           value: value,
           onChanged: onChanged,
           activeThumbColor: colors.primary,
@@ -174,7 +174,7 @@ class _SuperAdminSettingsScreenState extends ConsumerState<SuperAdminSettingsScr
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           title: Text(plan['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('Price: \u20B9${plan['price']} / month', style: TextStyle(color: colors.onSurface.withValues(alpha: 0.6))),
+          subtitle: Text('Price: \u20B9${plan['price']} / month', style: TextStyle(color: colors.onSurface.withValues(alpha: 0.75))),
           trailing: Icon(Icons.arrow_forward_ios_rounded, size: 14, color: colors.primary),
           onTap: () => _showPlanDialog(plan),
         ),

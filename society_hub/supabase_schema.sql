@@ -10,6 +10,7 @@ create extension if not exists "pgcrypto";
 create table if not exists societies (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  slug text unique, -- URL-friendly identifier
   address text,
   city text,
   registration_number text unique,

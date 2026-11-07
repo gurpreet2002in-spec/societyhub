@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import '../providers/marketplace_provider.dart';
 import '../../../services/api_service.dart';
 import '../../../core/theme/app_theme.dart';
@@ -269,8 +270,11 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
   Widget _buildListingCard(BuildContext context, WidgetRef ref,
       Map<String, dynamic> item, Map? user) {
     final isMine = item['sellerId'] == user?['id'];
-    final emoji = _categoryEmojis[item['category']] ?? '\u{1F4E6}';
+    final emoji = item['imageEmoji'] ?? _categoryEmojis[item['category']] ?? '\u{1F4E6}';
     final timeAgo = _formatTime(item['createdAt']);
+    final isProperty = item['category'] == 'property';
+    final isRent = item['listingType'] == 'rent';
+    final isSold = '${item['status'] ?? ''}'.toLowerCase() == 'sold';
 
     return Container(
       decoration: BoxDecoration(
@@ -319,6 +323,29 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                   ),
                 ),
               ),
+              if (isProperty || isSold)
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isSold
+                          ? Colors.grey.shade700
+                          : (isRent ? const Color(0xFF0E7490) : AppTheme.primary),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Text(
+                      isSold ? (isRent ? 'RENTED' : 'SOLD') : (isRent ? 'FOR RENT' : 'FOR SALE'),
+                      style: GoogleFonts.inter(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.6,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
 
@@ -341,9 +368,10 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item['price'] == 0
+                    (item['price'] ?? 0) == 0
                         ? 'FREE'
-                        : '\u20B9${item['price']?.toString() ?? '0'}',
+                        : '\u20B9${NumberFormat.decimalPattern('en_IN').format(item['price'] ?? 0)}'
+                            '${isRent ? '/month' : ''}',
                     style: GoogleFonts.manrope(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
@@ -414,8 +442,9 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
     final titleCtrl = TextEditingController();
     final descCtrl = TextEditingController();
     final priceCtrl = TextEditingController(text: '0');
-    String category = 'other';
+    String category = _selectedCategory == 'property' ? 'property' : 'other';
     String condition = 'good';
+    String listingType = 'sale';
 
     showModalBottomSheet(
       context: context,
@@ -448,11 +477,47 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Post Item for Sale',
+              Text(
+                  category == 'property'
+                      ? (listingType == 'rent' ? 'Post Property for Rent' : 'Post Property for Sale')
+                      : 'Post Item for Sale',
                   style: GoogleFonts.manrope(
                       fontSize: 20, fontWeight: FontWeight.w800,
                       color: AppTheme.onSurface)),
               const SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: category,
+                decoration: InputDecoration(
+                  labelText: 'Category',
+                  filled: true,
+                  fillColor: AppTheme.surfaceContainerHighest,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none),
+                ),
+                items: const [
+                  DropdownMenuItem(value: 'furniture', child: Text('Furniture')),
+                  DropdownMenuItem(value: 'electronics', child: Text('Electronics')),
+                  DropdownMenuItem(value: 'appliances', child: Text('Appliances')),
+                  DropdownMenuItem(value: 'vehicle', child: Text('Vehicle')),
+                  DropdownMenuItem(value: 'services', child: Text('Services')),
+                  DropdownMenuItem(value: 'property', child: Text('Property')),
+                  DropdownMenuItem(value: 'other', child: Text('Other')),
+                ],
+                onChanged: (v) => ss(() => category = v ?? 'other'),
+              ),
+              if (category == 'property') ...[
+                const SizedBox(height: 12),
+                SegmentedButton<String>(
+                  segments: const [
+                    ButtonSegment(value: 'sale', label: Text('For Sale'), icon: Icon(Icons.sell_outlined)),
+                    ButtonSegment(value: 'rent', label: Text('For Rent'), icon: Icon(Icons.key_outlined)),
+                  ],
+                  selected: {listingType},
+                  onSelectionChanged: (s) => ss(() => listingType = s.first),
+                ),
+              ],
+              const SizedBox(height: 12),
               TextField(
                 controller: titleCtrl,
                 style: GoogleFonts.inter(color: AppTheme.onSurface, fontWeight: FontWeight.w600),
@@ -487,7 +552,9 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                     keyboardType: TextInputType.number,
                     style: GoogleFonts.inter(color: AppTheme.onSurface, fontWeight: FontWeight.w600),
                     decoration: InputDecoration(
-                      labelText: '\u20B9 Price (0 = Free)',
+                      labelText: category == 'property' && listingType == 'rent'
+                          ? '\u20B9 Rent per month'
+                          : '\u20B9 Price (0 = Free)',
                       filled: true,
                       fillColor: AppTheme.surfaceContainerHighest,
                       border: OutlineInputBorder(
@@ -518,28 +585,6 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                   ),
                 ),
               ]),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                value: category,
-                decoration: InputDecoration(
-                  labelText: 'Category',
-                  filled: true,
-                  fillColor: AppTheme.surfaceContainerHighest,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide.none),
-                ),
-                items: const [
-                  DropdownMenuItem(value: 'furniture', child: Text('Furniture')),
-                  DropdownMenuItem(value: 'electronics', child: Text('Electronics')),
-                  DropdownMenuItem(value: 'appliances', child: Text('Appliances')),
-                  DropdownMenuItem(value: 'vehicle', child: Text('Vehicle')),
-                  DropdownMenuItem(value: 'services', child: Text('Services')),
-                  DropdownMenuItem(value: 'property', child: Text('Property')),
-                  DropdownMenuItem(value: 'other', child: Text('Other')),
-                ],
-                onChanged: (v) => ss(() => category = v ?? 'other'),
-              ),
               const SizedBox(height: 24),
               GestureDetector(
                 onTap: () async {
@@ -554,12 +599,13 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                       'category': category,
                       'condition': condition,
                       'imageEmoji': _categoryEmojis[category] ?? '\u{1F4E6}',
+                      'listingType': category == 'property' ? listingType : 'sale',
                     });
                     if (context.mounted) Navigator.pop(context);
                   } catch (e) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('$e')));
+                          SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))));
                     }
                   }
                 },

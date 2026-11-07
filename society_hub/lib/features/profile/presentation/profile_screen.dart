@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../services/api_service.dart';
+import '../../../core/unit_labels.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -90,7 +91,7 @@ class ProfileScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        isAdmin ? '\u00F0\u0178\u2018\u2018 Admin' : '\u00F0\u0178\u008F\u00A0 Resident',
+                        isAdmin ? '\u{1F451} Admin' : '\u{1F3E0} Resident',
                         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                       ),
                     ),
@@ -118,7 +119,7 @@ class ProfileScreen extends ConsumerWidget {
                       color: Colors.blueAccent,
                       title: 'My Vehicles',
                       subtitle: 'Manage your registered vehicles',
-                      onTap: () => context.push('/parking'),
+                      onTap: () => context.push('/resident/vehicles'),
                     ),
                     _OptionItem(
                       icon: Icons.group_rounded,
@@ -265,7 +266,7 @@ class ProfileScreen extends ConsumerWidget {
           const Divider(height: 24),
           _buildInfoRow(Icons.phone_rounded, 'Contact', user?['contactNumber'] ?? 'Not set', colors),
           const Divider(height: 24),
-          _buildInfoRow(Icons.apartment_rounded, 'Flat', user?['apartmentNumber'] ?? user?['flatId'] ?? 'N/A', colors),
+          _buildInfoRow(unitIcon(user?['propertyType'] as String?, unitType: user?['unit_type'] as String?), unitNoun(user?['propertyType'] as String?, unitType: user?['unit_type'] as String?), user?['apartmentNumber'] ?? user?['flatId'] ?? 'N/A', colors),
         ],
       ),
     );
@@ -283,7 +284,7 @@ class ProfileScreen extends ConsumerWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w600)),
+            Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF616161), fontWeight: FontWeight.w600)),
             Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -292,7 +293,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildSectionLabel(String label) {
-    return Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w800, letterSpacing: 2));
+    return Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF616161), fontWeight: FontWeight.w800, letterSpacing: 2));
   }
 
   Widget _buildOptionCard(BuildContext context, List<_OptionItem> items) {
@@ -316,8 +317,8 @@ class ProfileScreen extends ConsumerWidget {
                   child: Icon(item.icon, color: item.color, size: 22),
                 ),
                 title: Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                subtitle: Text(item.subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                subtitle: Text(item.subtitle, style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
+                trailing: const Icon(Icons.chevron_right, color: Color(0xFF616161)),
                 onTap: item.onTap,
               ),
               if (i < items.length - 1) const Divider(height: 1, indent: 64),
@@ -340,11 +341,11 @@ class ProfileScreen extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: currentCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Current Password', border: OutlineInputBorder())),
+            TextField(controller: currentCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Current Password')),
             const SizedBox(height: 12),
-            TextField(controller: newCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'New Password', border: OutlineInputBorder())),
+            TextField(controller: newCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'New Password')),
             const SizedBox(height: 12),
-            TextField(controller: confirmCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Confirm New Password', border: OutlineInputBorder())),
+            TextField(controller: confirmCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Confirm New Password')),
           ],
         ),
         actions: [
@@ -359,7 +360,7 @@ class ProfileScreen extends ConsumerWidget {
                 await ref.read(apiServiceProvider).changePassword(currentCtrl.text, newCtrl.text);
                 if (ctx.mounted) ctx.pop();
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('\u00E2\u0153\u2026 Password changed successfully!'), backgroundColor: Colors.green));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('\u2705 Password changed successfully!'), backgroundColor: Colors.green));
                 }
               } catch (e) {
                 if (context.mounted) {

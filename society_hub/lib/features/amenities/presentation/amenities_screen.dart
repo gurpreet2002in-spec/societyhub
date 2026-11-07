@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../admin/presentation/admin_setup_sheets.dart';
+import '../../../services/api_service.dart';
 import 'package:intl/intl.dart';
 import '../providers/amenity_provider.dart';
 
@@ -31,8 +33,16 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
     final colors = Theme.of(context).colorScheme;
     final asyncAmenities = ref.watch(amenitiesProvider);
     final asyncBookings = ref.watch(myBookingsProvider);
+    final isAdmin = ref.read(apiServiceProvider).user?['role'] == 'admin';
 
     return Scaffold(
+      floatingActionButton: isAdmin
+          ? FloatingActionButton.extended(
+              onPressed: () => _editAmenity(context),
+              icon: const Icon(Icons.add),
+              label: const Text('Add amenity'),
+            )
+          : null,
       backgroundColor: colors.surface,
       appBar: AppBar(
         title: const Text('Amenities', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -57,8 +67,21 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
 
   Widget _buildAmenitiesGrid(BuildContext context, AsyncValue<List<dynamic>> asyncAmenities) {
     return asyncAmenities.when(
-      data: (amenities) => GridView.builder(
-        padding: const EdgeInsets.all(16),
+      data: (amenities) => amenities.isEmpty
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(
+                  ref.read(apiServiceProvider).user?['role'] == 'admin'
+                      ? 'No amenities yet. Tap "Add amenity" to add your clubhouse, pool, gym\u2026'
+                      : 'No amenities have been added for your society yet.',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Color(0xFF616161)),
+                ),
+              ),
+            )
+          : GridView.builder(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, crossAxisSpacing: 12, mainAxisSpacing: 12, childAspectRatio: 0.88,
         ),
@@ -72,8 +95,10 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
 
   Widget _buildAmenityCard(BuildContext context, Map<String, dynamic> amenity) {
     final colors = Theme.of(context).colorScheme;
+    final isAdmin = ref.read(apiServiceProvider).user?['role'] == 'admin';
     return GestureDetector(
       onTap: () => _showBookingSheet(context, amenity),
+      onLongPress: isAdmin ? () => _editAmenity(context, amenity: amenity) : null,
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -90,12 +115,22 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(amenity['imageEmoji'] ?? '\u{1F3E2}', style: const TextStyle(fontSize: 40)),
+              Row(children: [
+                Text(amenity['imageEmoji'] ?? '\u{1F3E2}', style: const TextStyle(fontSize: 40)),
+                const Spacer(),
+                if (isAdmin)
+                  IconButton(
+                    tooltip: 'Edit amenity',
+                    visualDensity: VisualDensity.compact,
+                    icon: Icon(Icons.edit_outlined, size: 18, color: colors.primary),
+                    onPressed: () => _editAmenity(context, amenity: amenity),
+                  ),
+              ]),
               const Spacer(),
               Text(amenity['name'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
               const SizedBox(height: 4),
               Text(amenity['description'] ?? '', maxLines: 2, overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                  style: const TextStyle(fontSize: 11, color: Color(0xFF616161))),
               const SizedBox(height: 8),
               Row(children: [
                 Icon(Icons.people_outline, size: 13, color: colors.primary),
@@ -122,11 +157,17 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
     );
   }
 
+  Future<void> _editAmenity(BuildContext context, {Map<String, dynamic>? amenity}) async {
+    if (await showAmenityEditor(context, ref, amenity: amenity)) {
+      await ref.read(amenitiesProvider.notifier).load();
+    }
+  }
+
   Widget _buildMyBookings(BuildContext context, AsyncValue<List<dynamic>> asyncBookings) {
     return asyncBookings.when(
       data: (bookings) {
         if (bookings.isEmpty) {
-          return const Center(child: Text('No bookings yet.', style: TextStyle(color: Colors.grey)));
+          return const Center(child: Text('No bookings yet.', style: TextStyle(color: Color(0xFF616161))));
         }
         return ListView.builder(
           padding: const EdgeInsets.all(16),
@@ -162,7 +203,7 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
               children: [
                 Text(amenityName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 Text('${b['bookingDate']}  ${b['startTime']} \u2013 ${b['endTime']}',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
                 if ((b['totalAmount'] ?? 0) > 0)
                   Text('\u20B9${b['totalAmount']}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
               ],
@@ -187,7 +228,7 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(b['status']?.toString().toUpperCase() ?? '',
-                  style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontSize: 10, color: Color(0xFF616161), fontWeight: FontWeight.bold)),
             ),
         ],
       ),
@@ -227,7 +268,7 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(amenity['name'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   Text('Open: ${amenity['openTime']} \u2013 ${amenity['closeTime']}',
-                      style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
                 ]),
               ]),
               const SizedBox(height: 20),
@@ -255,7 +296,7 @@ class _AmenitiesScreenState extends ConsumerState<AmenitiesScreen>
                     Text(DateFormat('EEE, MMM d yyyy').format(selectedDate),
                         style: const TextStyle(fontWeight: FontWeight.w600)),
                     const Spacer(),
-                    const Icon(Icons.edit, size: 16, color: Colors.grey),
+                    const Icon(Icons.edit, size: 16, color: Color(0xFF616161)),
                   ]),
                 ),
               ),

@@ -139,7 +139,7 @@ class _MaintenanceTab extends ConsumerWidget {
                       Text(status.replaceAll('_', ' ').toUpperCase(),
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
                       const Spacer(),
-                      Text('$count tickets', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text('$count tickets', style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
                     ]),
                     const SizedBox(height: 6),
                     ClipRRect(
@@ -179,7 +179,7 @@ class _AmenityTab extends ConsumerWidget {
           children: [
             const Text('Amenity Utilization', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 4),
-            const Text('Bookings and revenue per amenity', style: TextStyle(color: Colors.grey, fontSize: 13)),
+            const Text('Bookings and revenue per amenity', style: TextStyle(color: Color(0xFF616161), fontSize: 13)),
             const SizedBox(height: 20),
             ...items.map((a) {
               final bookings = a['bookings'] as int? ?? 0;
@@ -205,9 +205,9 @@ class _AmenityTab extends ConsumerWidget {
                     ]),
                     const SizedBox(height: 10),
                     Row(children: [
-                      Text('$bookings bookings', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text('$bookings bookings', style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
                       const Spacer(),
-                      Text('${(pct * 100).toStringAsFixed(0)}% relative', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text('${(pct * 100).toStringAsFixed(0)}% relative', style: const TextStyle(fontSize: 12, color: Color(0xFF616161))),
                     ]),
                     const SizedBox(height: 6),
                     ClipRRect(
@@ -242,10 +242,10 @@ class _OccupancyTab extends ConsumerWidget {
       data: (d) => ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          _headerCard(context, '${d['occupancyRate']}%', 'Flat Occupancy Rate',
+          _headerCard(context, '${d['occupancyRate']}%', 'Occupancy Rate',
               '${d['occupiedFlats']} of ${d['totalFlats']} flats occupied', colors.primary),
           const SizedBox(height: 16),
-          _progressSection(context, 'Flat Occupancy', double.tryParse(d['occupancyRate'].toString()) ?? 0, 100, colors.primary),
+          _progressSection(context, 'Occupancy', double.tryParse(d['occupancyRate'].toString()) ?? 0, 100, colors.primary),
           const SizedBox(height: 20),
           _statRow(context, [
             ('Total Flats', '${d['totalFlats']}', Colors.blue),
@@ -322,7 +322,7 @@ Widget _statRow(BuildContext context, List<(String, String, Color)> items) {
         child: Column(children: [
           Text(item.$2, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: item.$3)),
           const SizedBox(height: 2),
-          Text(item.$1, style: const TextStyle(fontSize: 10, color: Colors.grey), textAlign: TextAlign.center),
+          Text(item.$1, style: const TextStyle(fontSize: 10, color: Color(0xFF616161)), textAlign: TextAlign.center),
         ]),
       ),
     )).toList(),
@@ -341,7 +341,7 @@ Widget _statCard(BuildContext context, String label, String value, Color color, 
       Icon(icon, color: color, size: 28),
       const SizedBox(width: 12),
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+        Text(label, style: const TextStyle(fontSize: 13, color: Color(0xFF616161))),
         Text(value, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: color)),
       ]),
     ]),

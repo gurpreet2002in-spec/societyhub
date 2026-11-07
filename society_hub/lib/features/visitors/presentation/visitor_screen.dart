@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../services/api_service.dart';
+import '../models/visitor.dart';
 import '../providers/visitor_provider.dart';
+import 'gate_pass_sheet.dart';
 
 class VisitorScreen extends ConsumerWidget {
   const VisitorScreen({super.key});
@@ -22,21 +25,21 @@ class VisitorScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/visitors/create'),
+        onPressed: () => context.push('/visitors/create'),
         icon: const Icon(Icons.add),
-        label: const Text('Pre-approve', style: TextStyle(fontWeight: FontWeight.bold)),
+        label: const Text('New gate pass', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: asyncVisitors.when(
         data: (visitors) {
           if (visitors.isEmpty) {
-            return const Center(child: Text("No visitors today\u00F0\u0178\u017D\u2030", style: TextStyle(color: Colors.grey, fontSize: 16)));
+            return const Center(child: Text("No visitors today\u{1F389}", style: TextStyle(color: Color(0xFF616161), fontSize: 16)));
           }
           return ListView.builder(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 80.0, top: 8.0),
             itemCount: visitors.length,
             itemBuilder: (context, index) {
               final visitor = visitors[index];
-              return _buildVisitorCard(context, visitor);
+              return _buildVisitorCard(context, ref, visitor);
             },
           );
         },
@@ -46,8 +49,18 @@ class VisitorScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildVisitorCard(BuildContext context, dynamic visitor) {
-    Color statusColor = visitor.status == 'Pending' ? Colors.orange : (visitor.status == 'Approved' ? Colors.green : Colors.grey);
+  Widget _buildVisitorCard(BuildContext context, WidgetRef ref, Visitor visitor) {
+    final expired = visitor.status == 'Pre-approved' && !visitor.isActivePass;
+    final label = expired ? 'Expired' : visitor.status;
+    Color statusColor = expired
+        ? Colors.grey
+        : (visitor.status == 'Pending' || visitor.status == 'Awaiting approval')
+            ? Colors.orange
+            : (visitor.status == 'Approved' || visitor.status == 'Pre-approved' || visitor.status == 'Checked-in')
+                ? Colors.green
+                : visitor.status == 'Declined'
+                    ? Colors.red
+                    : Colors.grey;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -71,7 +84,7 @@ class VisitorScreen extends ConsumerWidget {
                     color: statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12)
                   ),
-                  child: Text(visitor.status.toUpperCase(), style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1)),
+                  child: Text(label.toUpperCase(), style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1)),
                 )
               ],
             ),
@@ -83,9 +96,25 @@ class VisitorScreen extends ConsumerWidget {
             if (visitor.passCode != null)
               Row(
                 children: [
-                  Icon(Icons.vpn_key, size: 16, color: Colors.grey.shade600),
+                  Icon(Icons.vpn_key, size: 16, color: Color(0xFF616161)),
                   const SizedBox(width: 4),
-                  Text('Passcode: ${visitor.passCode}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Expanded(
+                    child: Text('Pass code: ${visitor.passCode}',
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  ),
+                  if (visitor.isActivePass)
+                    TextButton.icon(
+                      onPressed: () => showGatePassSheet(
+                        context,
+                        visitorName: visitor.name,
+                        passCode: visitor.passCode!,
+                        flat: visitor.flatNumber,
+                        societyName: ref.read(apiServiceProvider).user?['societyName'] as String?,
+                        validUntil: visitor.passValidUntil,
+                      ),
+                      icon: const Icon(Icons.qr_code_2_rounded, size: 18),
+                      label: const Text('Show pass'),
+                    ),
                 ],
               )
           ],

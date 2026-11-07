@@ -5,6 +5,7 @@ import '../../../services/api_service.dart';
 import '../../../widgets/premium_glass_app_bar.dart';
 import '../../../widgets/premium_card.dart';
 import '../../../widgets/premium_button.dart';
+import '../../../core/unit_labels.dart';
 
 final superAdminSocietiesProvider = FutureProvider.autoDispose<List<dynamic>>((ref) async {
   return ref.read(apiServiceProvider).getSuperAdminSocieties();
@@ -36,7 +37,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (societies) {
           if (societies.isEmpty) {
-            return const Center(child: Text('No societies found.', style: TextStyle(color: Colors.grey)));
+            return const Center(child: Text('No societies found.', style: TextStyle(color: Color(0xFF616161))));
           }
           return ListView.builder(
             padding: const EdgeInsets.all(16).copyWith(bottom: 100),
@@ -86,9 +87,17 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${soc['city']} \u2022 Reg: ${soc['registration_number'] ?? 'N/A'}',
+                          'Join code: ${soc['join_code'] ?? 'N/A'}   •   Link: /${soc['slug'] ?? 'N/A'}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: colors.primary,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${soc['city']} \u2022 ${unitsTitle(soc['property_type'])} \u2022 Reg: ${soc['registration_number'] ?? 'N/A'}',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: colors.onSurface.withValues(alpha: 0.6),
+                            color: colors.onSurface.withValues(alpha: 0.75),
                           ),
                         ),
                       ],
@@ -190,6 +199,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
     final cityCtrl = TextEditingController();
     final regCtrl = TextEditingController();
     String plan = 'basic';
+    String propertyType = 'apartments';
     final colors = Theme.of(context).colorScheme;
 
     showModalBottomSheet(
@@ -200,7 +210,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => Padding(
           padding: EdgeInsets.only(left: 24, right: 24, top: 24, bottom: MediaQuery.of(ctx).viewInsets.bottom + 24),
-          child: Column(
+          child: SingleChildScrollView(child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -250,6 +260,20 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                initialValue: propertyType,
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: 'Type of homes in this society *',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                dropdownColor: colors.surfaceContainer,
+                items: societyTypeLabels.entries
+                    .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
+                    .toList(),
+                onChanged: (v) => setState(() => propertyType = v!),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
                 initialValue: plan,
                 decoration: InputDecoration(
                   labelText: 'Subscription Plan',
@@ -275,7 +299,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                     try {
                       await ref.read(apiServiceProvider).superAdminCreateSociety(
                         name: nameCtrl.text, address: addressCtrl.text, city: cityCtrl.text,
-                        registrationNumber: regCtrl.text, subscriptionPlan: plan,
+                        registrationNumber: regCtrl.text, subscriptionPlan: plan, propertyType: propertyType,
                       );
                       if (ctx.mounted) Navigator.of(ctx).pop();
                       ref.invalidate(superAdminSocietiesProvider);
@@ -290,7 +314,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                 ),
               ),
             ],
-          ),
+          )),
         ),
       ),
     );
@@ -302,6 +326,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
     final cityCtrl = TextEditingController(text: soc['city']);
     String status = soc['subscription_status'] ?? 'active';
     String plan = soc['subscription_plan'] ?? 'basic';
+    String propertyType = societyTypeLabels.containsKey(soc['property_type']) ? soc['property_type'] : 'apartments';
     final colors = Theme.of(context).colorScheme;
 
     showModalBottomSheet(
@@ -312,7 +337,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => Padding(
           padding: EdgeInsets.only(left: 24, right: 24, top: 24, bottom: MediaQuery.of(ctx).viewInsets.bottom + 24),
-          child: Column(
+          child: SingleChildScrollView(child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -368,6 +393,20 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                initialValue: propertyType,
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: 'Type of homes in this society *',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                dropdownColor: colors.surfaceContainer,
+                items: societyTypeLabels.entries
+                    .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
+                    .toList(),
+                onChanged: (v) => setState(() => propertyType = v!),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
                 initialValue: plan,
                 decoration: InputDecoration(
                   labelText: 'Subscription Plan',
@@ -389,7 +428,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                     try {
                       await ref.read(apiServiceProvider).superAdminUpdateSociety(
                         soc['id'], name: nameCtrl.text, address: addressCtrl.text, city: cityCtrl.text,
-                        subscriptionStatus: status, subscriptionPlan: plan,
+                        subscriptionStatus: status, subscriptionPlan: plan, propertyType: propertyType,
                       );
                       if (ctx.mounted) Navigator.of(ctx).pop();
                       ref.invalidate(superAdminSocietiesProvider);
@@ -404,7 +443,7 @@ class _SuperAdminSocietiesScreenState extends ConsumerState<SuperAdminSocietiesS
                 ),
               ),
             ],
-          ),
+          )),
         ),
       ),
     );

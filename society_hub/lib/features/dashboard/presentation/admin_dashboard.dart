@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import '../providers/dashboard_provider.dart';
 import '../../../services/api_service.dart';
+import '../../../core/unit_labels.dart';
 import '../../notifications/providers/notifications_provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../widgets/premium_glass_app_bar.dart';
@@ -115,7 +117,7 @@ class AdminDashboard extends ConsumerWidget {
                     const SizedBox(height: 40),
 
                     // \u2500\u2500\u2500 Administrative Controls \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-                    _buildAdminControls(context, userRole),
+                    _buildAdminControls(context, userRole, user?['propertyType'] as String?),
 
                     const SizedBox(height: 40),
                   ],
@@ -136,13 +138,9 @@ class AdminDashboard extends ConsumerWidget {
           children: [
             Expanded(child: _StatCard(
               label: 'Collection Status',
-              value: '${stats['collectionPct'] ?? 85}%',
-              badge: '+2.4%',
-              badgeColor: AppTheme.secondary,
-              badgeBg: const Color(0xFFD4F5DF),
-              badgeIcon: Icons.trending_up,
-              footer: 'Collected: \u20B9${stats['totalCollection'] ?? '4.2L'} / \u20B9${stats['expected'] ?? '5L'} Expected',
-              progressValue: (stats['collectionPct'] ?? 85) / 100.0,
+              value: '${stats['collectionPct'] ?? 0}%',
+              footer: 'Collected: \u20B9${stats['totalCollection'] ?? '0'} / \u20B9${stats['expected'] ?? '0'} Expected',
+              progressValue: (((stats['collectionPct'] ?? 0) as num) / 100.0).clamp(0.0, 1.0).toDouble(),
             )),
             const SizedBox(width: 16),
             Expanded(child: _StatCard(
@@ -161,7 +159,7 @@ class AdminDashboard extends ConsumerWidget {
           label: 'Visitors Today',
           value: '${stats['visitorsToday'] ?? 0}',
           actionLabel: 'Review',
-          onActionTap: () {},
+          onActionTap: () => context.push('/visitors'),
           isWide: true,
         ),
       ],
@@ -222,39 +220,39 @@ class AdminDashboard extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        _ComplaintRow(
-                          icon: Icons.water_drop_outlined,
-                          iconBg: AppTheme.primaryFixed,
-                          iconColor: AppTheme.primary,
-                          title: 'Water Leakage',
-                          sub: 'Rahul Sharma \u2022 B-402',
-                          badge: 'Critical',
-                          badgeIsError: true,
-                        ),
-                        const SizedBox(height: 8),
-                        _ComplaintRow(
-                          icon: Icons.electrical_services_outlined,
-                          iconBg: AppTheme.surfaceContainerHighest,
-                          iconColor: AppTheme.onSurfaceVariant,
-                          title: 'Lift Not Working',
-                          sub: 'Anita Desai \u2022 Wing C',
-                          badge: 'Investigating',
-                          badgeIsError: false,
-                        ),
-                        const SizedBox(height: 8),
-                        _ComplaintRow(
-                          icon: Icons.park_outlined,
-                          iconBg: AppTheme.surfaceContainerHighest,
-                          iconColor: AppTheme.onSurfaceVariant,
-                          title: 'Garden Maintenance',
-                          sub: 'Vikram Goel \u2022 A-105',
-                          badge: 'Scheduled',
-                          badgeIsGreen: true,
-                        ),
-                      ],
-                    ),
+                    child: Builder(builder: (_) {
+                      final recent = List<dynamic>.from(stats['recentComplaints'] ?? const []);
+                      if (recent.isEmpty) {
+                        return const _EmptyNote(text: 'No complaints yet.');
+                      }
+                      final rows = <Widget>[];
+                      for (var i = 0; i < recent.length; i++) {
+                        final c = Map<String, dynamic>.from(recent[i] as Map);
+                        final reporter = c['users'] as Map?;
+                        final priority = '${c['priority'] ?? ''}';
+                        final status = '${c['status'] ?? 'Open'}';
+                        final urgent = priority == 'Critical' || priority == 'High';
+                        final resolved = status == 'Resolved';
+                        final parts = <String>[
+                          if (reporter?['name'] != null) '${reporter!['name']}',
+                          if (reporter?['apartment_number'] != null && '${reporter!['apartment_number']}'.isNotEmpty)
+                            '${reporter['apartment_number']}',
+                          _timeAgo(c['created_at']),
+                        ].where((s) => s.isNotEmpty).toList();
+                        if (i > 0) rows.add(const SizedBox(height: 8));
+                        rows.add(_ComplaintRow(
+                          icon: urgent ? Icons.priority_high_rounded : Icons.report_problem_outlined,
+                          iconBg: urgent ? AppTheme.primaryFixed : AppTheme.surfaceContainerHighest,
+                          iconColor: urgent ? AppTheme.primary : AppTheme.onSurfaceVariant,
+                          title: '${c['title'] ?? 'Complaint'}',
+                          sub: parts.join(' \u2022 '),
+                          badge: resolved ? 'Resolved' : (urgent && status == 'Open' ? priority : status),
+                          badgeIsError: urgent && !resolved,
+                          badgeIsGreen: resolved,
+                        ));
+                      }
+                      return Column(children: rows);
+                    }),
                   ),
                 ],
               ),
@@ -278,21 +276,29 @@ class AdminDashboard extends ConsumerWidget {
               _TextButton(label: 'Manage', onTap: () => context.push('/community')),
             ]),
             const SizedBox(height: 16),
-            _NoticeCard(
-              title: 'Annual General Meeting 2024',
-              time: '2 hours ago',
-              body: 'Mandatory attendance for all flat owners. Discussing upcoming parking renovations and maintenance fee revision.',
-              meta: 'Oct 24, 2023 \u2022 10:30 AM',
-              accentColor: AppTheme.primary,
-            ),
-            const SizedBox(height: 12),
-            _NoticeCard(
-              title: 'Society Cultural Festival',
-              time: '1 day ago',
-              body: 'Join us for the Diwali celebration. Performance slots are open for children. Contact the office to register.',
-              meta: 'Nov 12, 2023',
-              accentColor: AppTheme.secondary,
-            ),
+            Builder(builder: (_) {
+              final notices = List<dynamic>.from(stats['recentNotices'] ?? const []);
+              if (notices.isEmpty) {
+                return const _EmptyNote(text: 'No notices yet.');
+              }
+              final cards = <Widget>[];
+              for (var i = 0; i < notices.length; i++) {
+                final n = Map<String, dynamic>.from(notices[i] as Map);
+                final created = DateTime.tryParse('${n['created_at']}')?.toLocal();
+                if (i > 0) cards.add(const SizedBox(height: 12));
+                cards.add(_NoticeCard(
+                  title: '${n['title'] ?? 'Notice'}',
+                  time: _timeAgo(n['created_at']),
+                  body: '${n['body'] ?? ''}',
+                  meta: <String>[
+                    if (n['category'] != null) '${n['category']}',
+                    if (created != null) DateFormat('MMM d, yyyy \u2022 h:mm a').format(created),
+                  ].join(' \u2022 '),
+                  accentColor: i.isEven ? AppTheme.primary : AppTheme.secondary,
+                ));
+              }
+              return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: cards);
+            }),
           ],
         ),
       ],
@@ -300,7 +306,7 @@ class AdminDashboard extends ConsumerWidget {
   }
 
   // \u2500\u2500\u2500 Admin Controls \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-  Widget _buildAdminControls(BuildContext context, String userRole) {
+  Widget _buildAdminControls(BuildContext context, String userRole, [String? propertyType]) {
     return Container(
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
@@ -333,6 +339,7 @@ class AdminDashboard extends ConsumerWidget {
               _ControlButton(icon: Icons.cleaning_services_outlined, label: 'Daily Help', onTap: () => context.push('/daily-help')),
               _ControlButton(icon: Icons.pool_outlined, label: 'Amenities', onTap: () => context.push('/amenities')),
               if (userRole == 'admin') ...[
+                _ControlButton(icon: unitIcon(propertyType), label: unitsTitle(propertyType), onTap: () => context.push('/admin/flats')),
                 _ControlButton(icon: Icons.request_quote_outlined, label: 'Gen Bills', onTap: () => context.push('/admin/billing')),
                 _ControlButton(icon: Icons.bar_chart_rounded, label: 'Reports', onTap: () => context.push('/reports')),
               ],
@@ -843,6 +850,37 @@ class _NotificationBell extends ConsumerWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+// ─── Helpers for live dashboard data ───────────────────────────────────────
+
+/// "just now", "5 min ago", "3 hours ago", "2 days ago", or a date.
+String _timeAgo(dynamic iso) {
+  final t = DateTime.tryParse('${iso ?? ''}')?.toLocal();
+  if (t == null) return '';
+  final d = DateTime.now().difference(t);
+  if (d.inMinutes < 1) return 'just now';
+  if (d.inMinutes < 60) return '${d.inMinutes} min ago';
+  if (d.inHours < 24) return '${d.inHours} ${d.inHours == 1 ? 'hour' : 'hours'} ago';
+  if (d.inDays < 7) return '${d.inDays} ${d.inDays == 1 ? 'day' : 'days'} ago';
+  return DateFormat('MMM d, yyyy').format(t);
+}
+
+class _EmptyNote extends StatelessWidget {
+  final String text;
+  const _EmptyNote({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.inter(fontSize: 13, color: AppTheme.onSurfaceVariant),
+      ),
     );
   }
 }

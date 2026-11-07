@@ -1,0 +1,10 @@
+# Copy this file to key.properties (same folder) and fill in your values.
+# key.properties and *.jks are git-ignored — never commit them.
+#
+# Create a keystore once with (run in a terminal, keep the file and passwords safe):
+#   keytool -genkey -v -keystore F:\keys\societyhub-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+storePassword=YOUR_STORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=upload
+storeFile=F:/keys/societyhub-upload.jks

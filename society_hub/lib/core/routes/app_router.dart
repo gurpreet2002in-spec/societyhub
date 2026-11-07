@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/presentation/login_screen.dart';
+import '../../features/auth/presentation/pending_approval_screen.dart';
 import '../../features/auth/presentation/connect_society_screen.dart';
 import '../../features/dashboard/presentation/admin_dashboard.dart';
 import '../../features/complaints/presentation/complaints_screen.dart';
@@ -11,6 +12,7 @@ import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/profile/presentation/edit_profile_screen.dart';
 import '../../features/visitors/presentation/visitor_screen.dart';
 import '../../features/visitors/presentation/create_pass_screen.dart';
+import '../../features/visitors/presentation/visitor_approval_screen.dart';
 import '../../features/billing/presentation/admin_billing_screen.dart';
 import '../../features/daily_help/presentation/daily_help_screen.dart';
 import '../../features/amenities/presentation/amenities_screen.dart';
@@ -20,13 +22,16 @@ import '../../features/marketplace/presentation/marketplace_screen.dart';
 import '../../features/reports/presentation/reports_screen.dart';
 import '../../features/admin/presentation/admin_users_screen.dart';
 import '../../features/admin/presentation/society_settings_screen.dart';
+import '../../features/admin/presentation/flats_screen.dart';
 import '../../features/admin/presentation/super_admin_dashboard.dart';
+import '../../features/guard/presentation/guard_dashboard_screen.dart';
 import '../../features/admin/presentation/super_admin_societies_screen.dart';
 import '../../features/admin/presentation/super_admin_manage_admins_screen.dart';
 import '../../features/admin/presentation/super_admin_settings_screen.dart';
 import '../../features/admin/presentation/super_admin_invoices_screen.dart';
 import '../../features/admin/presentation/super_admin_reports_screen.dart';
 import '../../features/notifications/presentation/notifications_screen.dart';
+import '../../features/resident/presentation/resident_vehicles_screen.dart';
 import '../../widgets/shell_layout.dart';
 import '../../widgets/super_admin_shell_layout.dart';
 import '../providers/auth_provider.dart';
@@ -37,31 +42,84 @@ final serverConfiguredProvider = FutureProvider<bool>((ref) async => true);
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final isAuth = ref.watch(authProvider);
+  // Read once here. The redirect callback below can still run on this router
+  // after login has already marked this provider for rebuild, and Riverpod
+  // forbids `ref.read` at that moment ("Cannot use ref functions after the
+  // dependency of a provider changed").
+  final api = ref.read(apiServiceProvider);
+
+  // Each role's own home screen.
+  String homeFor(String? role) {
+    if (role == 'super_admin') return '/super_admin/dashboard';
+    if (role == 'guard') return '/guard/dashboard';
+    return '/dashboard';
+  }
 
   return GoRouter(
-    initialLocation: isAuth
-        ? (ref.read(apiServiceProvider).user?['role'] == 'super_admin'
-            ? '/super_admin/dashboard'
-            : '/dashboard')
-        : '/login',
+    initialLocation: isAuth ? homeFor(api.user?['role'] as String?) : '/login',
     redirect: (context, state) {
       final location = state.matchedLocation;
       final isLogin = location == '/login';
       final isConnect = location == '/connect';
+      final isRegister = location.startsWith('/register/');
+      final isSlug = state.pathParameters.containsKey('slug');
 
-      // Redirect away from the legacy /connect screen
-      if (isConnect) return isAuth ? '/dashboard' : '/login';
+      // Allow access to login, register, and slug routes when not authenticated
+      if (!isAuth && !isLogin && !isRegister && !isSlug) return '/login';
+      
+      final role = api.user?['role'] as String?;
+      String home() => homeFor(role);
 
-      if (!isAuth && !isLogin) return '/login';
-      if (isAuth && isLogin) {
-        final role = ref.read(apiServiceProvider).user?['role'];
-        return role == 'super_admin' ? '/super_admin/dashboard' : '/dashboard';
+      // Residents/guards/admins who are not active members of a society (no
+      // society yet, pending approval, or rejected) only get the waiting screen.
+      // (status null = database not migrated yet → don't lock anyone out.)
+      final status = api.user?['status'];
+      final needsApproval = isAuth && role != null && role != 'super_admin' &&
+          (api.user?['society_id'] == null || (status != null && status != 'active'));
+      final isPending = location == '/pending';
+      if (needsApproval) return isPending ? null : '/pending';
+      if (isPending) return isAuth ? home() : '/login';
+
+      if (isAuth && (isLogin || isSlug)) return home();
+
+      // Role-based screen access. The database (RLS) is the real security
+      // boundary; this just keeps users out of screens that aren't theirs.
+      if (isAuth && role != null) {
+        final superOnly = location.startsWith('/super_admin');
+        final adminOnly = location.startsWith('/admin') || location == '/reports';
+        final guardOnly = location.startsWith('/guard');
+        if (superOnly && role != 'super_admin') return home();
+        if (adminOnly && role != 'admin' && role != 'super_admin') return home();
+        if (guardOnly && role != 'guard' && role != 'admin') return home();
+        // Guards only use the gate screens (plus notifications and their profile).
+        if (role == 'guard') {
+          final guardAllowed = guardOnly ||
+              location == '/notifications' ||
+              location.startsWith('/profile');
+          if (!guardAllowed) return home();
+        }
       }
       return null;
     },
     routes: [
       GoRoute(path: '/connect',           builder: (_, __) => const ConnectSocietyScreen()),
       GoRoute(path: '/login',            builder: (_, __) => const LoginScreen()),
+      GoRoute(path: '/pending',          builder: (_, __) => const PendingApprovalScreen()),
+      GoRoute(path: '/register/:societyId', builder: (context, state) => LoginScreen(societyId: state.pathParameters['societyId'])),
+      
+      GoRoute(
+        path: '/guard/dashboard',
+        builder: (_, __) => const GuardDashboardScreen(),
+      ),
+      // Full-screen "visitor at the gate" (opened from the ringing alert).
+      GoRoute(
+        path: '/visitor-approval/:id',
+        builder: (context, state) => VisitorApprovalScreen(
+          visitorId: state.pathParameters['id']!,
+          initialAction: state.uri.queryParameters['action'],
+        ),
+      ),
+
       ShellRoute(
         builder: (context, state, child) => SuperAdminShellLayout(child: child),
         routes: [
@@ -95,12 +153,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(path: '/admin/billing',    builder: (_, __) => const AdminBillingScreen()),
           GoRoute(path: '/admin/users',      builder: (_, __) => const AdminUsersScreen()),
           GoRoute(path: '/admin/society',    builder: (_, __) => const SocietySettingsScreen()),
+          GoRoute(path: '/admin/flats',      builder: (_, __) => const FlatsScreen()),
           GoRoute(path: '/daily-help',       builder: (_, __) => const DailyHelpScreen()),
           GoRoute(path: '/amenities',        builder: (_, __) => const AmenitiesScreen()),
           GoRoute(path: '/parking',          builder: (_, __) => const ParkingScreen()),
           GoRoute(path: '/marketplace',      builder: (_, __) => const MarketplaceScreen()),
           GoRoute(path: '/reports',          builder: (_, __) => const ReportsScreen()),
+          GoRoute(path: '/resident/vehicles', builder: (_, __) => const ResidentVehiclesScreen()),
         ],
+      ),
+      GoRoute(
+        path: '/:slug',
+        builder: (context, state) => LoginScreen(societySlug: state.pathParameters['slug']),
       ),
     ],
   );

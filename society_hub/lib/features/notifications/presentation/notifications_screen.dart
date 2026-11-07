@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../providers/notifications_provider.dart';
@@ -84,7 +84,7 @@ class NotificationsScreen extends ConsumerWidget {
                   const SizedBox(height: 20),
                   const Text('All caught up!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  const Text('No notifications yet.', style: TextStyle(color: Colors.grey)),
+                  const Text('No notifications yet.', style: TextStyle(color: Color(0xFF616161))),
                 ],
               ),
             );
@@ -101,11 +101,12 @@ class NotificationsScreen extends ConsumerWidget {
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final n = notifs[index];
-                final isRead = n['isRead'] as bool? ?? false;
-                final type = n['type'] as String? ?? 'general';
+                final isRead = n['is_read'] as bool? ?? false;
+                final data = n['data'] as Map<String, dynamic>? ?? {};
+                final type = data['type'] as String? ?? 'general';
                 final color = _colorForType(type);
-                final created = n['createdAt'] != null
-                    ? DateFormat('dd MMM, hh:mm a').format(DateTime.parse(n['createdAt']).toLocal())
+                final created = n['created_at'] != null
+                    ? DateFormat('dd MMM, hh:mm a').format(DateTime.parse(n['created_at']).toLocal())
                     : '';
 
                 return Dismissible(
@@ -195,7 +196,7 @@ class NotificationsScreen extends ConsumerWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   created,
-                                  style: TextStyle(color: Colors.grey.shade400, fontSize: 11),
+                                  style: TextStyle(color: Color(0xFF616161), fontSize: 11),
                                 ),
                               ],
                             ),

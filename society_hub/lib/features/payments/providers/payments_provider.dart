@@ -1,6 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/api_service.dart';
 
+/// All invoices of the admin's society (admin Billing screen).
+final adminInvoicesProvider = FutureProvider.autoDispose<List<dynamic>>((ref) {
+  return ref.watch(apiServiceProvider).getSocietyInvoices();
+});
+
 final invoicesProvider = StateNotifierProvider<InvoicesNotifier, AsyncValue<List<dynamic>>>((ref) {
   final apiService = ref.watch(apiServiceProvider);
   return InvoicesNotifier(apiService)..loadInvoices();

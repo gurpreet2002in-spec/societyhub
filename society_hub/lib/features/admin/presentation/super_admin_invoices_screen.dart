@@ -18,7 +18,27 @@ class SuperAdminInvoicesScreen extends ConsumerWidget {
       appBar: const PremiumGlassAppBar(showBranding: true),
       backgroundColor: AppTheme.surface,
       body: invoicesAsync.when(
-        data: (invoices) => RefreshIndicator(
+        data: (invoices) => invoices.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.receipt_long_outlined, size: 64, color: AppTheme.outlineVariant),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No invoices found',
+                      style: theme.textTheme.titleMedium?.copyWith(color: AppTheme.onSurfaceVariant),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: () => ref.refresh(superAdminInvoicesProvider),
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Refresh'),
+                    ),
+                  ],
+                ),
+              )
+            : RefreshIndicator(
           onRefresh: () async => ref.refresh(superAdminInvoicesProvider),
           child: ListView.separated(
             padding: EdgeInsets.only(
@@ -104,7 +124,20 @@ class SuperAdminInvoicesScreen extends ConsumerWidget {
           ),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Error loading invoices: $e', textAlign: TextAlign.center),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: () => ref.refresh(superAdminInvoicesProvider),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

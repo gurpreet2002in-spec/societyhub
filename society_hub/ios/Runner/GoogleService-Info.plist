@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAhIJRHzSv7-lIPWa5xeB0ecZBOJ2r6dHM</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.societyHub</string>
+	<key>GCM_SENDER_ID</key>
+	<string>526131022258</string>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:526131022258:ios:eb5c9f52d45befe3343cab</string>
+	<key>PROJECT_ID</key>
+	<string>bus-ticket-booking-syste-2c7f3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bus-ticket-booking-syste-2c7f3.firebasestorage.app</string>
+</dict>
+</plist>
